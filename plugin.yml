@@ -1,0 +1,18 @@
+{
+  "website": "http://marcely.de", 
+  "commands": {
+    "warp": {
+      "description": "Essentials /warp with gui.",
+      "usage": "/warp"
+    },
+     "warpcfg": {
+      "description": "Configurations for /warp GUI.",
+      "usage": "/warpadmin"
+    }
+  }, 
+  "version": 1.2, 
+  "name": "Essentials-Warp_gui", 
+  "author": "Marcely1199", 
+  "main": "de.marcely.warpgui.main", 
+  "description": "A plugin for the command /warp.",
+}
