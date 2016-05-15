@@ -1,3 +1,12 @@
+/**
+* Adds an GUI for the essentials command /warp
+* https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
+*
+* @author  Marcely1199
+* @version 1.4
+* @website http://marcely.de/ 
+*/
+
 package de.marcely.warpgui;
 
 import java.io.File;
@@ -11,26 +20,29 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.marcely.warpgui.command.warp;
+import de.marcely.warpgui.config.LanguageConfig;
 import de.marcely.warpgui.config.WarpConfig;
-import de.marcely.warpgui.config.config;
+import de.marcely.warpgui.config.Config;
 import net.ess3.api.IEssentials;
 
-public class main extends JavaPlugin {
-	public static String version = "1.3";
+public class main extends JavaPlugin {	
+	public static Plugin plugin;
 	
 	public static IEssentials es = null;
 	
 	public static String CONFIG_INVTITLE = ChatColor.DARK_AQUA + "Warps";
 	public static boolean CONFIG_FIRSTCHARCAPS = false;
-	public static LanguageType CONFIG_LANGUAGE = LanguageType.English;
 	
 	public static WarpConfig warps = new WarpConfig();
 	
-	@Override
 	public void onEnable(){
+		plugin = this;
+		
 		// get essentials variable
 		es = (IEssentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
 		if(es == null) // if he isn't using the spigot version of spigot
@@ -47,13 +59,9 @@ public class main extends JavaPlugin {
 		File dir = new File("plugins/Essentials_WarpGUI");
 		if(!dir.exists()) dir.mkdir();
 		
-		config.load();
+		Config.load();
+		LanguageConfig.load();
 		if(WarpConfig.exists()) warps = WarpConfig.load();
-	}
-	
-	@Override
-	public void onDisable(){
-		
 	}
 	
 	private Listener listener = new Listener(){
@@ -89,5 +97,24 @@ public class main extends JavaPlugin {
 				return warp;
 		}
 		return null;
+	}
+	
+	public static ItemStack getItemStack(ItemStack is, String name){
+		ItemMeta im = is.getItemMeta();
+		im.setDisplayName(name);
+		is.setItemMeta(im);
+		return is;
+	}
+	
+	public static boolean isNumeric(String str){
+		try{
+			Integer.valueOf(str);
+			return true;
+		}catch(Exception e){ }
+		return false;
+	}
+	
+	public static String getVersion(){
+		return plugin.getDescription().getVersion();
 	}
 }

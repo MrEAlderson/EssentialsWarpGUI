@@ -1,7 +1,17 @@
+/**
+* Adds an GUI for the essentials command /warp
+* https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
+*
+* @author  Marcely1199
+* @version 1.4
+* @website http://marcely.de/ 
+*/
+
 package de.marcely.warpgui;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -13,7 +23,7 @@ public class Warp implements Serializable {
 	private String iconName;
 	private short iconID;
 	private String prefix = "";
-	private LinkedHashMap<Integer, String> lore = new LinkedHashMap<Integer, String>();
+	private List<String> lores = new ArrayList<String>();
 	
 	public Warp(String name, ItemStack icon){
 		setName(name);
@@ -26,12 +36,8 @@ public class Warp implements Serializable {
 		setPrefix(prefix);
 	}
 	
-	public int addLore(String lore){
-		if(this.lore.size() < 5){
-			this.lore.put(this.lore.size(), lore);
-			return this.lore.size() - 1;
-		}else
-			return -1;
+	public void addLore(String lore){
+		this.lores.add(lore);
 	}
 	
 	public void setName(String name){
@@ -59,22 +65,11 @@ public class Warp implements Serializable {
 		return this.prefix;
 	}
 	
-	public String getLore(int line){
-		if(this.lore.containsKey(line)){
-			return this.lore.get(line);
-		}else
-			return null;
+	public List<String> getLores(){
+		return this.lores;
 	}
 	
-	public int getLoreSize(){
-		return this.lore.size();
-	}
-	
-	public boolean removeLore(int line){
-		if(this.lore.containsKey(line)){
-			lore.remove(line);
-			return true;
-		}else
-			return false;
+	public boolean removeLore(String lore){
+		return this.lores.remove(lore);
 	}
 }
