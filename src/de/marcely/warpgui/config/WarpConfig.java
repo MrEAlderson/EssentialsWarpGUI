@@ -1,3 +1,12 @@
+/**
+* Adds an GUI for the essentials command /warp
+* https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
+*
+* @author  Marcely1199
+* @version 1.4
+* @website http://marcely.de/ 
+*/
+
 package de.marcely.warpgui.config;
 
 import java.io.File;
@@ -14,15 +23,16 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import de.marcely.warpgui.Warp;
+import de.marcely.warpgui.main;
 
 public class WarpConfig implements Serializable {
 	private static final long serialVersionUID = -1266449831520034396L;
-	private ArrayList<Warp> warps = new ArrayList<Warp>();
+	public ArrayList<Warp> warps = new ArrayList<Warp>();
 	
 	public WarpConfig(){ }
 	
-	public int addLore(String warpname, String lore){
-		return getWarp(warpname).addLore(lore);
+	public void addLore(String warpname, String lore){
+		getWarp(warpname).addLore(lore);
 	}
 	
 	public void setIcon(String warpname, Material icon, int id){
@@ -59,26 +69,18 @@ public class WarpConfig implements Serializable {
 		return getWarp(warpname).getPrefix();
 	}
 	
-	public String getLore(String warpname, int line){
-		return getWarp(warpname).getLore(line);
-	}
-	
-	public boolean removeLore(String warpname, int line){
-		return getWarp(warpname).removeLore(line);
-	}
-	
 	public boolean contains(String warpname){
 		return getWarp(warpname) != null;
 	}
 	
 	public static boolean exists(){
-		return new File("plugins/Essentials_WarpGUI/warps.cfg").exists();
+		return new File("plugins/" + main.plugin.getName() + "/warps.cfg").exists();
 	}
 	
 	public static WarpConfig load(){
 		FileInputStream file = null;
 		try {
-			file = new FileInputStream("plugins/Essentials_WarpGUI/warps.cfg");
+			file = new FileInputStream("plugins/" + main.plugin.getName() + "/warps.cfg");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -108,7 +110,7 @@ public class WarpConfig implements Serializable {
 	public static void save(WarpConfig config){
 		FileOutputStream file = null;
 		try {
-			file = new FileOutputStream("plugins/Essentials_WarpGUI/warps.cfg");
+			file = new FileOutputStream("plugins/" + main.plugin.getName() + "/warps.cfg");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
