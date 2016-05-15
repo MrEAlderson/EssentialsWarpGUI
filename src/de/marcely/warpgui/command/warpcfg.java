@@ -1,3 +1,12 @@
+/**
+* Adds an GUI for the essentials command /warp
+* https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
+*
+* @author  Marcely1199
+* @version 1.4
+* @website http://marcely.de/ 
+*/
+
 package de.marcely.warpgui.command;
 
 import org.bukkit.ChatColor;
@@ -5,12 +14,14 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
 
 import de.marcely.warpgui.Warp;
-import de.marcely.warpgui.language;
+import de.marcely.warpgui.Language;
 import de.marcely.warpgui.main;
+import de.marcely.warpgui.config.LanguageConfig;
 import de.marcely.warpgui.config.WarpConfig;
-import de.marcely.warpgui.config.config;
+import de.marcely.warpgui.config.Config;
 
 public class warpcfg implements CommandExecutor {
 
@@ -32,74 +43,135 @@ public class warpcfg implements CommandExecutor {
 						if(warpname != null){
 							if(icon != null){
 								setIcon(warpname, icon, id);
-								sender.sendMessage(ChatColor.GREEN + language.iconChangedTo + " " + ChatColor.DARK_GREEN + icon.name().toLowerCase().replace("_", " ") + ChatColor.GREEN + "!");
+								sender.sendMessage(Language.Changed_Icon.getMessage().replace("{icon", icon.name().toLowerCase().replace("_", " ")));
 							}else{
-								sender.sendMessage(ChatColor.DARK_RED + language.unkownMaterial + " " + ChatColor.RED + args[2] + ChatColor.DARK_RED + "!");
+								sender.sendMessage(Language.Unkown_Material.getMessage().replace("{material}", splits[0]));
 							}
 						}else{
-							sender.sendMessage(ChatColor.DARK_RED + language.theWarp + " " + ChatColor.RED + warpname + ChatColor.DARK_RED + " " + language.doesntExists);
+							sender.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", warpname));
 						}
 					}else{
-						sender.sendMessage(ChatColor.YELLOW + language.howToUseThisCommand + ": " + ChatColor.GOLD + "/warpcfg seticon <warp name> <material>");
+						sender.sendMessage(Language.Usage.getMessage().replace("{usage}", "/" + label + " seticon <warp name> <material>"));
 					}
 				}else if(subcommand.equalsIgnoreCase("prefix")){
 					if(args.length >= 2){
+						
 						String warpname = main.getRealName(args[1]);
 						if(warpname != null){
+							
 							Warp warp = main.warps.getWarp(warpname);
+							
+							if(warp == null){
+								warp = new Warp(warpname, new ItemStack(Material.CLAY_BALL));
+								main.warps.warps.add(warp);
+							}
+							
 							String bPrefix = null;
 							
 							if(warp != null && warp.getPrefix() != null)
 								bPrefix = warp.getPrefix();
 							
+							// set the prefix
 							if(args.length >= 4 && args[2].equalsIgnoreCase("set")){
 								String aPrefix = args[3];
 								main.warps.setPrefix(warpname, aPrefix);
 								WarpConfig.save(main.warps);
-								sender.sendMessage(ChatColor.GREEN + language.thePrefixByTheWarp + " " + ChatColor.DARK_GREEN + warpname + ChatColor.GREEN + " " + language.hasBeenSuccessfullyChanged);
+								sender.sendMessage(Language.Changed_Prefix.getMessage().replace("{warp}", warpname));
+							// informations
 							}else{
 								for(int i=0; i<7; i++)
 									sender.sendMessage("");
 								if(bPrefix != null)
 									sender.sendMessage(ChatColor.GRAY + "Prefix: " + ChatColor.WHITE + bPrefix + warpname);
 								else
-									sender.sendMessage(ChatColor.RED + warpname + " " + ChatColor.DARK_RED + language.gotNoPrefix);
+									sender.sendMessage(Language.No_Prefix.getMessage().replace("{warp}", warpname));
 								sender.sendMessage("");
-								sender.sendMessage(ChatColor.GOLD + language.write + ChatColor.YELLOW + "/warpcfg prefix <warp name> set <prefix> " + ChatColor.GOLD + language.toChangeThePrefix);
+								sender.sendMessage(Language.Usage_Change_Prefix.getMessage().replace("{usage}", "/" + label + " prefix <warp name> set <prefix>"));
 							}
-						}else{
-							sender.sendMessage(ChatColor.DARK_RED + language.theWarp + " " + ChatColor.RED + args[1] + ChatColor.DARK_RED + " " + language.doesntExists);
-						}
-					}else{
-						sender.sendMessage(ChatColor.YELLOW + language.howToUseThisCommand + ": " + ChatColor.GOLD + "/warpcfg prefix <warp name>");
-					}
+						}else
+							sender.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", args[1]));
+					}else
+						sender.sendMessage(Language.Usage.getMessage().replace("{usage}", "/" + label + " prefix <warp name>"));
 				}else if(subcommand.equalsIgnoreCase("lore")){
-					sender.sendMessage(ChatColor.RED + "Currently not supported!");
-					/*if(args.length >= 2){
-						if(main.existsWarp(args[1])){
+					
+					if(args.length >= 2){
+						
+						String warpname = main.getRealName(args[1]);
+						
+						if(warpname != null){
+							
+							Warp warp = main.warps.getWarp(warpname);
+							
+							if(warp == null){
+								warp = new Warp(warpname, new ItemStack(Material.CLAY_BALL));
+								main.warps.warps.add(warp);
+							}
+							
+							// check if under 1.4
+							try{
+								warp.getLores();
+							}catch(Exception e){
+								sender.sendMessage(ChatColor.RED + "A error occured: Remove the file at " + ChatColor.DARK_RED + "plugins/" + main.plugin.getName() + "/warps.cfg" + '\n' + ChatColor.RED + "And reload this plugin");
+								return true;
+							}
+							
+							
+							// add lore
 							if(args.length >= 4 && args[2].equalsIgnoreCase("add")){
 								
+								warp.addLore(args[3]);
+								WarpConfig.save(main.warps);
+								sender.sendMessage(Language.Added_Lore.getMessage().replace("{warp}", warpname));
+								
+							// remove lore
 							}else if(args.length >= 4 && args[2].equalsIgnoreCase("remove")){
 								
-							}else{
+								if(main.isNumeric(args[3])){
+									
+									int id = Integer.valueOf(args[3]);
+									
+									if(id >= 0 && id < warp.getLores().size()){
+										
+										warp.removeLore(warp.getLores().get(id));
+										WarpConfig.save(main.warps);
+										sender.sendMessage(Language.Removed_Lore.getMessage().replace("{id}", args[3]).replace("{warp}", warpname));
+										
+									}else
+										sender.sendMessage(Language.Unkown_ID.getMessage().replace("{id}", args[3]));
+									
+								}else
+									sender.sendMessage(Language.NotA_Number.getMessage().replace("{number}", args[3]));
 								
+							// informations
+							}else{
+								sender.sendMessage(ChatColor.DARK_AQUA + "Lores:");
+								
+								int i=0;
+								for(String lore:warp.getLores()){
+									sender.sendMessage("" + ChatColor.DARK_GREEN + i + ChatColor.GREEN + " " + lore);
+									i++;
+								}
+								
+								sender.sendMessage("");
+								sender.sendMessage(Language.Usage_Add_Lore.getMessage().replace("{usage}", "/" + label + " lore <warp name> add <lore>"));
+								sender.sendMessage(Language.Usage_Remove_Lore.getMessage().replace("{usage}", "/" + label + " lore <warp name> remove <id>"));
 							}
-						}else{
-							sender.sendMessage(ChatColor.DARK_RED + language.theWarp + " " + ChatColor.RED + args[1] + ChatColor.DARK_RED + " " + language.doesntExists);
-						}
-					}else{
-						sender.sendMessage(ChatColor.YELLOW + language.howToUseThisCommand + ": " + ChatColor.GOLD + "/warpcfg lore <warp name>");
-					}*/
+						}else
+							sender.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", args[1]));
+						
+					}else
+						sender.sendMessage(Language.Usage.getMessage().replace("{usage}", "/" + label + " lore <warp name>"));
 				}else if(subcommand.equalsIgnoreCase("reload")){
-					config.load();
-					sender.sendMessage(ChatColor.GREEN + language.reloadedConfig);
+					Config.load();
+					LanguageConfig.load();
+					sender.sendMessage(Language.Reloaded_Config.getMessage());
 				}else{
-					sender.sendMessage(ChatColor.DARK_RED + language.unkownSubcommand + " " + ChatColor.RED + subcommand + ChatColor.DARK_RED + "!");
+					sender.sendMessage(Language.Unkown_Argument.getMessage().replace("{arg}", subcommand));
 				}
 			}else
 				sendCommands(sender);
 		}else{
-			sender.sendMessage(ChatColor.DARK_RED + language.noPermissions);
+			sender.sendMessage(Language.No_Permissions.getMessage());
 		}
 		return true;
 	}
@@ -107,14 +179,14 @@ public class warpcfg implements CommandExecutor {
 	public void sendCommands(CommandSender sender){
 		sender.sendMessage("");
 		sender.sendMessage(ChatColor.YELLOW + " ------------ " + ChatColor.GOLD + "Commands" + ChatColor.YELLOW + " ------------ ");
-		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg help " + ChatColor.AQUA + language.saysYouTheCommandForWarpcfg);
-		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg seticon <warpName> <material> " + ChatColor.AQUA + language.changeTheIconFromAWarp);
-		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg prefix <warpName> " + ChatColor.AQUA + language.changeThePrefixFromAWarp);
-		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg lore <warpName> " + ChatColor.AQUA + language.addOrRemoveLoresFromAWarp);
-		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg reload " + ChatColor.AQUA + language.reloadTheConfig);
+		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg help");
+		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg seticon <warpName> <material>");
+		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg prefix <warpName>");
+		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg lore <warpName>");
+		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg reload");
 		sender.sendMessage("");
-		sender.sendMessage(ChatColor.GREEN + "WarpGUI " + language.ressourceBy + " " + ChatColor.DARK_GREEN + "Marcely1199");
-		sender.sendMessage(ChatColor.GREEN + "WarpGUI " + language.version + " " + ChatColor.DARK_GREEN + main.version);
+		sender.sendMessage(Language.Info_MadeBy.getMessage().replace("{info}", "Marcely1199"));
+		sender.sendMessage(Language.Info_Version.getMessage().replace("{info}", "" + main.getVersion()));
 	}
 	
 	public void setIcon(String warpname, Material icon, int id){
