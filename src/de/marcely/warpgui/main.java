@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.4
+* @version 1.5
 * @website http://marcely.de/ 
 */
 
@@ -11,19 +11,25 @@ package de.marcely.warpgui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.marcely.warpgui.Warp.WarpingPlayer;
 import de.marcely.warpgui.command.warp;
 import de.marcely.warpgui.config.LanguageConfig;
 import de.marcely.warpgui.config.WarpConfig;
@@ -37,6 +43,7 @@ public class main extends JavaPlugin {
 	
 	public static String CONFIG_INVTITLE = ChatColor.DARK_AQUA + "Warps";
 	public static boolean CONFIG_FIRSTCHARCAPS = false;
+	public static boolean CONFIG_INCLCMD_WARPS = true;
 	
 	public static WarpConfig warps = new WarpConfig();
 	
@@ -66,13 +73,54 @@ public class main extends JavaPlugin {
 	
 	private Listener listener = new Listener(){
 		@EventHandler
-		public void onInventoryClick(InventoryClickEvent event){
-			warp.onInventoryClick(event);
+		public void onInventoryClickEvent(InventoryClickEvent event){
+			warp.onInventoryClickEvent(event);
+		}
+		
+		@EventHandler
+		public void onInventoryDragEvent(InventoryDragEvent event){
+			warp.onInventoryDragEvent(event);
+		}
+		
+		@EventHandler
+		public void onPlayerMoveEvent(PlayerMoveEvent event){
+			Location from = event.getFrom();
+			Location to = event.getTo();
+			
+			if(from.getBlockX() == to.getBlockX() &&
+			   from.getBlockZ() == to.getBlockZ() &&
+			   from.distance(to) < 0.42)
+			return;
+			
+			WarpingPlayer wp = Warp.getWarpingPlayer(event.getPlayer());
+			
+			if(wp != null){
+				event.getPlayer().sendMessage(Language.Teleporting_Stopped.getMessage().replace("{warp}", wp.getWarp().getName()));
+				wp.cancel();
+			}
+		}
+		
+		@EventHandler
+		public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
+			String[] strs = event.getMessage().split(" ");
+			String label = strs[0].replace("/", "");
+			String[] args = new String[strs.length - 1];
+			
+			for(int i=1; i<strs.length; i++)
+				args[i - 1] = strs[i];
+			
+			if(CONFIG_INCLCMD_WARPS && label.equalsIgnoreCase("warps")){
+				warp.onCommand(event.getPlayer(), label, args);
+				event.setCancelled(true);
+			}
 		}
 	};
 	
-	public static ArrayList<Warp> getWarps(Player player){
-		ArrayList<Warp> list = new ArrayList<Warp>();
+	public static List<Warp> getWarps(Player player){
+		if(player.hasPermission("essentials.warp"))
+			return warps.getWarps();
+		
+		List<Warp> list = new ArrayList<Warp>();
 		for(String warp:es.getWarps().getList()){
 			if(player.hasPermission("essentials.warps." + warp.toLowerCase())){
 				Warp w = warps.getWarp(warp);
@@ -106,12 +154,23 @@ public class main extends JavaPlugin {
 		return is;
 	}
 	
-	public static boolean isNumeric(String str){
+	public static boolean isInteger(String str){
 		try{
 			Integer.valueOf(str);
 			return true;
 		}catch(Exception e){ }
 		return false;
+	}
+	
+	public static boolean isInteger(double d){
+		return String.valueOf(d).endsWith(".0");
+	}
+	
+	public static String getItemStackName(ItemStack is){
+		if(is == null || is.getItemMeta() == null)
+			return null;
+		else
+			return is.getItemMeta().getDisplayName();
 	}
 	
 	public static String getVersion(){
