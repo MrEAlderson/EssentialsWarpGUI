@@ -20,11 +20,14 @@ public class Config {
 		String version = manager.getConfigString("config-version");
 		String invtitle = manager.getConfigString("inv-title");
 		boolnull firstcharcaps = manager.getConfigBoolean("first-char-caps");
+		boolnull incl_warps = manager.getConfigBoolean("includecmd-warps");
 		
 		if(invtitle != null)
 			main.CONFIG_INVTITLE = Language.stringToChatColor(invtitle);
 		if(firstcharcaps != boolnull.NULL)
 			main.CONFIG_FIRSTCHARCAPS = firstcharcaps.toBoolean();
+		if(incl_warps != boolnull.NULL)
+			main.CONFIG_INCLCMD_WARPS = incl_warps.toBoolean();
 		
 		if(version == null || version != null && !version.equals(main.getVersion()))
 			save();
@@ -42,6 +45,11 @@ public class Config {
 		
 		manager.addComment("If it's enabled, the first character in the name of the warp is in caps");
 		manager.addConfig("first-char-caps", main.CONFIG_FIRSTCHARCAPS);
+		
+		manager.addEmptyLine();
+		
+		manager.addComment("If it's enabled, /warps will open the GUI too");
+		manager.addConfig("includecmd-warps", main.CONFIG_INCLCMD_WARPS);
 		
 		manager.save();
 	}
