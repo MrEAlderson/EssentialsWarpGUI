@@ -3,17 +3,14 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.4
+* @version 1.5
 * @website http://marcely.de/ 
 */
 
 package de.marcely.warpgui.command;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import net.ess3.api.InvalidWorldException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,11 +20,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.earth2me.essentials.commands.WarpNotFoundException;
 
 import de.marcely.warpgui.Warp;
 import de.marcely.warpgui.Language;
@@ -37,83 +33,93 @@ public class warp implements CommandExecutor {
 	private static int MAXPERPAGE = 36;
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+		onCommand(sender, label, args);
+		return true;
+	}
+	
+	public static void onCommand(CommandSender sender, String label, String[] args){
 		if(sender instanceof Player){
 			Player player = (Player) sender;
 			if(args.length == 0){
-				if(player.hasPermission("essentials.warp")){
+				if(main.getWarps(player).size() >= 1){
 					player.openInventory(getWarpInventory(player, 1));
 				}else{
 					sender.sendMessage(Language.No_Permissions.getMessage());
 				}
 			}else{
-				String warp = main.getRealName(args[0]);
+				Warp warp = main.warps.getWarp(args[0]);
 				if(warp != null){
-					if(sender.hasPermission("essentials.warps." + warp.toLowerCase()))
-						teleportToWarp(player, warp);
+					if(sender.hasPermission("essentials.warps." + warp.getName().toLowerCase()))
+						warp.warp(player);
 					else
 						sender.sendMessage(Language.No_Permissions.getMessage());
-				}else{
+				}else
 					player.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", args[0]));
-				}
 			}
 		}else{
 			sender.sendMessage(Language.NotA_Player.getMessage());
 		}
-		return true;
 	}
 	
 	
-	public static void onInventoryClick(InventoryClickEvent event){
+	public static void onInventoryClickEvent(InventoryClickEvent event){
 		Player player = (Player) event.getWhoClicked();
-		Inventory inv = event.getInventory();
+		Inventory inv = event.getClickedInventory();
 		ItemStack is = event.getCurrentItem();
-		if(inv.getTitle() != null && inv.getTitle().startsWith(main.CONFIG_INVTITLE) && is != null && is.getType() != null && is.getType() != Material.AIR){
+		
+		if(inv != null && inv.getTitle() != null && inv.getTitle().startsWith(main.CONFIG_INVTITLE) && is != null && is.getType() != null && is.getType() != Material.AIR){
 			event.setCancelled(true);
+			
+			if(is == null || is.getType() == null || is.getType() == Material.AIR)
+				return;
 			
 			// get page
 			int page = 1;
 			String p = inv.getTitle().replace(main.CONFIG_INVTITLE + " " + ChatColor.DARK_AQUA, "");
-			if(main.isNumeric(p))
+			if(main.isInteger(p))
 				page = Integer.valueOf(p);
 			
-			Warp warp = getWarpAt(player, event.getSlot());
+			// get warp
+			Warp warp = getWarpAt(
+					player, 
+					event.getSlot(), 
+					page);
+			
+			// teleport
 			if(warp != null){
 				player.closeInventory();
-				teleportToWarp(player, warp.getName());
-			}else{
-				ItemMeta im = is.getItemMeta();
-				if(im != null && im.getDisplayName() != null){
-					String name = im.getDisplayName();
-					if(name.equals(ChatColor.GREEN + "->")){
+				warp.warp(player);
+			}
+			
+			// change page if --> or <--
+			else{
+				String name = main.getItemStackName(is);
+				
+				if(name != null){
+					
+					int newPage = page;
+					
+					if(name.equals(ChatColor.GREEN + "-->"))
+						newPage++;
+					else if(name.equals(ChatColor.RED + "<--"))
+						newPage--;
+					
+					// change page
+					if(newPage != page){
 						
-						Inventory newInv = getWarpInventory(player, page + 1);
-						for(int i=0; i<newInv.getSize(); i++)
-							inv.setItem(i, newInv.getItem(i));
-						
-					}else if(name.equals(ChatColor.GREEN + "<-")){
-						
-						Inventory newInv = getWarpInventory(player, page - 1);
-						for(int i=0; i<newInv.getSize(); i++)
-							inv.setItem(i, newInv.getItem(i));
-						
+						Inventory newInv = getWarpInventory(player, newPage);
+						player.openInventory(newInv);
 					}
 				}
 			}
 		}
 	}
 	
-	public static void teleportToWarp(Player player, String warpname){
-		player.sendMessage(Language.Teleporting.getMessage().replace("{warp}", warpname));
-		try{
-			player.teleport(main.es.getWarps().getWarp(warpname));
-		}catch(WarpNotFoundException e){
-			player.sendMessage(ChatColor.RED + "A error occured: WarpNotFoundException");
-			e.printStackTrace();
-		}catch(InvalidWorldException e){
-			player.sendMessage(ChatColor.RED + "A error occured: InvalidWorldException");
-			e.printStackTrace();
-		}
+	public static void onInventoryDragEvent(InventoryDragEvent event){
+		Inventory inv = event.getInventory();
+		if(inv.getTitle() != null && inv.getTitle().startsWith(main.CONFIG_INVTITLE))
+			event.setCancelled(true);
 	}
 	
 	public static Inventory getWarpInventory(Player player, int page){
@@ -126,14 +132,14 @@ public class warp implements CommandExecutor {
 		
 		for(ItemStack is:getWarpsByPage(player, page))
 			inv.addItem(is);
-		
-		if(page < warps.size() / MAXPERPAGE)
-			inv.setItem(MAXPERPAGE - 9, main.getItemStack(new ItemStack(Material.PAPER), ChatColor.GREEN + "->"));
+		if(page < (double) warps.size() / MAXPERPAGE)
+			inv.setItem(MAXPERPAGE + 17, main.getItemStack(new ItemStack(Material.STAINED_CLAY, 1, (short) 5), ChatColor.GREEN + "-->"));
 		if(page > 1)
-			inv.setItem(MAXPERPAGE - 1, main.getItemStack(new ItemStack(Material.PAPER), ChatColor.GREEN + "<-"));
-		
-		for(int i=54; i<44; i++)
-			inv.setItem(i, main.getItemStack(new ItemStack(Material.STAINED_GLASS_PANE), " "));
+			inv.setItem(MAXPERPAGE + 9, main.getItemStack(new ItemStack(Material.STAINED_CLAY, 1, (short) 14), ChatColor.RED + "<--"));
+		if(warps.size() > MAXPERPAGE){
+			for(int i=MAXPERPAGE; i<MAXPERPAGE + 9; i++)
+				inv.setItem(i, main.getItemStack(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15), " "));
+		}
 		return inv;
 	}
 	
@@ -171,27 +177,44 @@ public class warp implements CommandExecutor {
 	}
 	
 	public static int getInvSize(int size){
-		for(int i=1; i<=10; i++){
+		for(int i=1; i<=6; i++){
 			if(size >= i*9-9 && size < i*9)
 				return i*9;
 		}
-		return 10*9;
+		return 6*9;
 	}
 	
-	public static Warp getWarpAt(Player player, int at){
-		// todo: faster
+	public static Warp getWarpAt(Player player, int at, int page){
 		List<Warp> warps = main.getWarps(player);
-		HashMap<Integer, Warp> list = new HashMap<Integer, Warp>();
-		int i=0;
+		
+		if(at > MAXPERPAGE)
+			return null;
+		
+		int slot = (page - 1) * MAXPERPAGE + at;
+		if(page > 1)
+			slot--;
+		
+		if(slot < warps.size())
+			return warps.get(slot);
+		else
+			return null;
+		/*
+		int i=0, slot = 0;
+		
 		for(Warp warp:warps){
-			list.put(i, warp);
+			int p = i + 1/ MAXPERPAGE;
+			
+			if(p == page){
+				System.out.println(p + " " + page + " " + slot + " " + at);
+				if(slot == at)
+					return warp;
+			
+				slot++;
+			}
+			
 			i++;
 		}
-		for(i=0; i<getInvSize(warps.size()); i++){
-			if(i == at && list.containsKey(at))
-				return list.get(at);
-		}
 		
-		return null;
+		return null;*/
 	}
 }
