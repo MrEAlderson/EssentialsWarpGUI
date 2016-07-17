@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5
+* @version 1.5.2
 * @website http://marcely.de/ 
 */
 
@@ -25,6 +25,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.marcely.warpgui.Util;
 import de.marcely.warpgui.Warp;
 import de.marcely.warpgui.Language;
 import de.marcely.warpgui.main;
@@ -42,7 +43,7 @@ public class warp implements CommandExecutor {
 		if(sender instanceof Player){
 			Player player = (Player) sender;
 			if(args.length == 0){
-				if(main.getWarps(player).size() >= 1){
+				if(Util.getWarps(player).size() >= 1){
 					player.openInventory(getWarpInventory(player, 1));
 				}else{
 					sender.sendMessage(Language.No_Permissions.getMessage());
@@ -50,12 +51,12 @@ public class warp implements CommandExecutor {
 			}else{
 				Warp warp = main.warps.getWarp(args[0]);
 				if(warp != null){
-					if(sender.hasPermission("essentials.warps." + warp.getName().toLowerCase()))
+					if(Util.hasPermission(sender, "essentials.warps." + warp.getName().toLowerCase()) || Util.hasPermission(sender, "essentials.warps.*"))
 						warp.warp(player);
 					else
 						sender.sendMessage(Language.No_Permissions.getMessage());
 				}else
-					player.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", args[0]));
+					player.sendMessage(Language.DoesntExist_Warp.getMessage().replace("{warp}", args[0]));
 			}
 		}else{
 			sender.sendMessage(Language.NotA_Player.getMessage());
@@ -77,7 +78,7 @@ public class warp implements CommandExecutor {
 			// get page
 			int page = 1;
 			String p = inv.getTitle().replace(main.CONFIG_INVTITLE + " " + ChatColor.DARK_AQUA, "");
-			if(main.isInteger(p))
+			if(Util.isInteger(p))
 				page = Integer.valueOf(p);
 			
 			// get warp
@@ -94,7 +95,7 @@ public class warp implements CommandExecutor {
 			
 			// change page if --> or <--
 			else{
-				String name = main.getItemStackName(is);
+				String name = Util.getItemStackName(is);
 				
 				if(name != null){
 					
@@ -123,7 +124,7 @@ public class warp implements CommandExecutor {
 	}
 	
 	public static Inventory getWarpInventory(Player player, int page){
-		List<Warp> warps = main.getWarps(player);
+		List<Warp> warps = Util.getWarps(player);
 		Inventory inv = null;
 		if(warps.size() > MAXPERPAGE)
 			inv = Bukkit.createInventory(player, getInvSize(warps.size()), main.CONFIG_INVTITLE + " " + ChatColor.DARK_AQUA + page);
@@ -132,13 +133,13 @@ public class warp implements CommandExecutor {
 		
 		for(ItemStack is:getWarpsByPage(player, page))
 			inv.addItem(is);
-		if(page < (double) warps.size() / MAXPERPAGE)
-			inv.setItem(MAXPERPAGE + 17, main.getItemStack(new ItemStack(Material.STAINED_CLAY, 1, (short) 5), ChatColor.GREEN + "-->"));
-		if(page > 1)
-			inv.setItem(MAXPERPAGE + 9, main.getItemStack(new ItemStack(Material.STAINED_CLAY, 1, (short) 14), ChatColor.RED + "<--"));
+		if(page < (double) warps.size() / MAXPERPAGE && inv.getSize() > MAXPERPAGE + 17)
+			inv.setItem(MAXPERPAGE + 17, Util.getItemStack(new ItemStack(Material.STAINED_CLAY, 1, (short) 5), ChatColor.GREEN + "-->"));
+		if(page > 1 && inv.getSize() > MAXPERPAGE + 9)
+			inv.setItem(MAXPERPAGE + 9, Util.getItemStack(new ItemStack(Material.STAINED_CLAY, 1, (short) 14), ChatColor.RED + "<--"));
 		if(warps.size() > MAXPERPAGE){
 			for(int i=MAXPERPAGE; i<MAXPERPAGE + 9; i++)
-				inv.setItem(i, main.getItemStack(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15), " "));
+				inv.setItem(i, Util.getItemStack(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15), " "));
 		}
 		return inv;
 	}
@@ -157,12 +158,12 @@ public class warp implements CommandExecutor {
 	
 	private static List<ItemStack> getWarps(Player player){
 		List<ItemStack> warps = new ArrayList<ItemStack>();
-		for(Warp warp:main.getWarps(player)){
+		for(Warp warp:Util.getWarps(player)){
 			ItemStack is = warp.getIcon();
 			ItemMeta im = is.getItemMeta();
 			
 			// name
-			im.setDisplayName(ChatColor.WHITE + warp.getPrefix() + main.firstCharCaps(warp.getName()));
+			im.setDisplayName(ChatColor.WHITE + warp.getPrefix() + Util.firstCharCaps(warp.getName()));
 			
 			// lores
 			List<String> lores = new ArrayList<String>();
@@ -185,7 +186,7 @@ public class warp implements CommandExecutor {
 	}
 	
 	public static Warp getWarpAt(Player player, int at, int page){
-		List<Warp> warps = main.getWarps(player);
+		List<Warp> warps = Util.getWarps(player);
 		
 		if(at > MAXPERPAGE)
 			return null;

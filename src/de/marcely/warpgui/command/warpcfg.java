@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.4
+* @version 1.5.2
 * @website http://marcely.de/ 
 */
 
@@ -16,6 +16,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
+import de.marcely.warpgui.Util;
 import de.marcely.warpgui.Warp;
 import de.marcely.warpgui.Language;
 import de.marcely.warpgui.main;
@@ -27,14 +28,14 @@ public class warpcfg implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(sender.hasPermission("warpgui.cfg")){
+		if(Util.hasPermission(sender, "warpgui.cfg")){
 			if(args.length >= 1){
 				String subcommand = args[0];
 				if(subcommand.equalsIgnoreCase("help")){
 					sendCommands(sender);
 				}else if(subcommand.equalsIgnoreCase("seticon")){
 					if(args.length >= 3){
-						String warpname = main.getRealName(args[1]);
+						String warpname = Util.getRealName(args[1]);
 						String[] splits = args[2].split(":");
 						Material icon = getMaterial(splits[0]);
 						int id = 0;
@@ -48,7 +49,7 @@ public class warpcfg implements CommandExecutor {
 								sender.sendMessage(Language.Unkown_Material.getMessage().replace("{material}", splits[0]));
 							}
 						}else{
-							sender.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", warpname));
+							sender.sendMessage(Language.DoesntExist_Warp.getMessage().replace("{warp}", warpname));
 						}
 					}else{
 						sender.sendMessage(Language.Usage.getMessage().replace("{usage}", "/" + label + " seticon <warp name> <material>"));
@@ -56,7 +57,7 @@ public class warpcfg implements CommandExecutor {
 				}else if(subcommand.equalsIgnoreCase("prefix")){
 					if(args.length >= 2){
 						
-						String warpname = main.getRealName(args[1]);
+						String warpname = Util.getRealName(args[1]);
 						if(warpname != null){
 							
 							Warp warp = main.warps.getWarp(warpname);
@@ -73,10 +74,18 @@ public class warpcfg implements CommandExecutor {
 							
 							// set the prefix
 							if(args.length >= 4 && args[2].equalsIgnoreCase("set")){
-								String aPrefix = args[3];
-								main.warps.setPrefix(warpname, aPrefix);
+								
+								main.warps.setPrefix(warpname, args[3]);
 								WarpConfig.save(main.warps);
 								sender.sendMessage(Language.Changed_Prefix.getMessage().replace("{warp}", warpname));
+							
+							// remove the prefix
+							}else if(args.length >= 3 && args[2].equalsIgnoreCase("remove")){
+								
+								main.warps.setPrefix(warpname, "");
+								WarpConfig.save(main.warps);
+								sender.sendMessage(Language.Removed_Prefix.getMessage().replace("{warp}", warpname));
+								
 							// informations
 							}else{
 								for(int i=0; i<7; i++)
@@ -87,16 +96,17 @@ public class warpcfg implements CommandExecutor {
 									sender.sendMessage(Language.No_Prefix.getMessage().replace("{warp}", warpname));
 								sender.sendMessage("");
 								sender.sendMessage(Language.Usage_Change_Prefix.getMessage().replace("{usage}", "/" + label + " prefix <warp name> set <prefix>"));
+								sender.sendMessage(Language.Usage_Remove_Prefix.getMessage().replace("{usage}", "/" + label + " prefix <warp name> remove"));
 							}
 						}else
-							sender.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", args[1]));
+							sender.sendMessage(Language.DoesntExist_Warp.getMessage().replace("{warp}", args[1]));
 					}else
 						sender.sendMessage(Language.Usage.getMessage().replace("{usage}", "/" + label + " prefix <warp name>"));
 				}else if(subcommand.equalsIgnoreCase("lore")){
 					
 					if(args.length >= 2){
 						
-						String warpname = main.getRealName(args[1]);
+						String warpname = Util.getRealName(args[1]);
 						
 						if(warpname != null){
 							
@@ -126,7 +136,7 @@ public class warpcfg implements CommandExecutor {
 							// remove lore
 							}else if(args.length >= 4 && args[2].equalsIgnoreCase("remove")){
 								
-								if(main.isNumeric(args[3])){
+								if(Util.isInteger(args[3])){
 									
 									int id = Integer.valueOf(args[3]);
 									
@@ -157,7 +167,7 @@ public class warpcfg implements CommandExecutor {
 								sender.sendMessage(Language.Usage_Remove_Lore.getMessage().replace("{usage}", "/" + label + " lore <warp name> remove <id>"));
 							}
 						}else
-							sender.sendMessage(Language.DoesntExist_Wrarp.getMessage().replace("{warp}", args[1]));
+							sender.sendMessage(Language.DoesntExist_Warp.getMessage().replace("{warp}", args[1]));
 						
 					}else
 						sender.sendMessage(Language.Usage.getMessage().replace("{usage}", "/" + label + " lore <warp name>"));
