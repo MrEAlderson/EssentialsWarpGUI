@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5
+* @version 1.5.1
 * @website http://marcely.de/ 
 */
 
@@ -79,10 +79,10 @@ public class Warp implements Serializable {
 	}
 	
 	public void warp(Player player){
-		double cooldown = main.es.getConfig().getDouble("teleport-cooldown");
+		double delay = main.es.getConfig().getDouble("teleport-delay");
 		
 		// teleport in delay
-		if(cooldown > 0){
+		if(delay > 0){
 			
 			WarpingPlayer wp = getWarpingPlayer(player);
 			
@@ -91,18 +91,18 @@ public class Warp implements Serializable {
 				wp.cancel();
 			}
 			
-			if(main.isInteger(cooldown))
-				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", main.firstCharCaps(getName())).replace("{secounds}", "" + (int) cooldown));
+			if(Util.isInteger(delay))
+				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", Util.firstCharCaps(getName())).replace("{secounds}", "" + (int) delay));
 			else
-				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", main.firstCharCaps(getName())).replace("{secounds}", "" + cooldown));
+				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", Util.firstCharCaps(getName())).replace("{secounds}", "" + delay));
 			
 			
-			warpingPlayers.add(WarpingPlayer.create(player, this, (long) cooldown));
+			warpingPlayers.add(WarpingPlayer.create(player, this, (long) delay));
 			
 			
 		// teleport instantly
 		}else{
-			player.sendMessage(Language.Teleporting.getMessage().replace("{warp}", main.firstCharCaps(getName())));
+			player.sendMessage(Language.Teleporting.getMessage().replace("{warp}", Util.firstCharCaps(getName())));
 			try{
 				player.teleport(main.es.getWarps().getWarp(getName()));
 			}catch(Exception e){
@@ -147,8 +147,8 @@ public class Warp implements Serializable {
 			Warp.warpingPlayers.remove(this);
 		}
 		
-		public static WarpingPlayer create(Player player, Warp warp, long delay){
-			WarpingPlayer wp = new WarpingPlayer(player, warp, null);
+		public static WarpingPlayer create(final Player player, final Warp warp, long delay){
+			final WarpingPlayer wp = new WarpingPlayer(player, warp, null);
 			
 			wp.setTask(new BukkitRunnable(){
 				public void run(){

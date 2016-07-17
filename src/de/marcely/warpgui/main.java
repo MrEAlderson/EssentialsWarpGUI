@@ -3,29 +3,23 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5
+* @version 1.5.2
 * @website http://marcely.de/ 
 */
 
 package de.marcely.warpgui;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -115,63 +109,6 @@ public class main extends JavaPlugin {
 			}
 		}
 	};
-	
-	public static List<Warp> getWarps(Player player){
-		if(player.hasPermission("essentials.warp"))
-			return warps.getWarps();
-		
-		List<Warp> list = new ArrayList<Warp>();
-		for(String warp:es.getWarps().getList()){
-			if(player.hasPermission("essentials.warps." + warp.toLowerCase())){
-				Warp w = warps.getWarp(warp);
-				if(w == null)
-					list.add(new Warp(warp, new ItemStack(Material.CLAY_BALL)));
-				else
-					list.add(w);
-			}
-		}
-		return list;
-	}
-	
-	public static String firstCharCaps(String str){
-		if(CONFIG_FIRSTCHARCAPS == true)
-			return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-		return str;
-	}
-	
-	public static String getRealName(String name){
-		for(String warp:es.getWarps().getList()){
-			if(warp.equalsIgnoreCase(name))
-				return warp;
-		}
-		return null;
-	}
-	
-	public static ItemStack getItemStack(ItemStack is, String name){
-		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(name);
-		is.setItemMeta(im);
-		return is;
-	}
-	
-	public static boolean isInteger(String str){
-		try{
-			Integer.valueOf(str);
-			return true;
-		}catch(Exception e){ }
-		return false;
-	}
-	
-	public static boolean isInteger(double d){
-		return String.valueOf(d).endsWith(".0");
-	}
-	
-	public static String getItemStackName(ItemStack is){
-		if(is == null || is.getItemMeta() == null)
-			return null;
-		else
-			return is.getItemMeta().getDisplayName();
-	}
 	
 	public static String getVersion(){
 		return plugin.getDescription().getVersion();
