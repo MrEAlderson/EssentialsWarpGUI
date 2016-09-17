@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5.2
+* @version 1.5.3
 * @website http://marcely.de/ 
 */
 
@@ -43,11 +43,10 @@ public class warp implements CommandExecutor {
 		if(sender instanceof Player){
 			Player player = (Player) sender;
 			if(args.length == 0){
-				if(Util.getWarps(player).size() >= 1){
+				if(Util.getWarps(player).size() >= 1)
 					player.openInventory(getWarpInventory(player, 1));
-				}else{
-					sender.sendMessage(Language.No_Permissions.getMessage());
-				}
+				else
+					player.sendMessage(Language.No_Warps.getMessage());
 			}else{
 				Warp warp = main.warps.getWarp(args[0]);
 				if(warp != null){

@@ -3,11 +3,13 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5.2
+* @version 1.5.3
 * @website http://marcely.de/ 
 */
 
 package de.marcely.warpgui.command;
+
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -171,6 +173,19 @@ public class warpcfg implements CommandExecutor {
 						
 					}else
 						sender.sendMessage(Language.Usage.getMessage().replace("{usage}", "/" + label + " lore <warp name>"));
+				}else if(subcommand.equalsIgnoreCase("list")){
+					String warps = "";
+					
+					List<Warp> list = main.warps.getWarps();
+					
+					for(int i=0; i<list.size(); i++){
+						warps += list.get(i).getName();
+						
+						if(i != list.size() - 1) warps += ", ";
+					}
+					
+					sender.sendMessage(Language.List_Warps.getMessage().replace("{warps}", warps));
+					
 				}else if(subcommand.equalsIgnoreCase("reload")){
 					Config.load();
 					LanguageConfig.load();
@@ -187,12 +202,12 @@ public class warpcfg implements CommandExecutor {
 	}
 	
 	public void sendCommands(CommandSender sender){
-		sender.sendMessage("");
 		sender.sendMessage(ChatColor.YELLOW + " ------------ " + ChatColor.GOLD + "Commands" + ChatColor.YELLOW + " ------------ ");
 		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg help");
 		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg seticon <warpName> <material>");
 		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg prefix <warpName>");
 		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg lore <warpName>");
+		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg list");
 		sender.sendMessage(ChatColor.DARK_AQUA + "/warpcfg reload");
 		sender.sendMessage("");
 		sender.sendMessage(Language.Info_MadeBy.getMessage().replace("{info}", "Marcely1199"));
