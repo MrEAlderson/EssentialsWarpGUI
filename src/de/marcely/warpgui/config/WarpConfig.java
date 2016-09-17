@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.4
+* @version 1.5.3
 * @website http://marcely.de/ 
 */
 
@@ -18,16 +18,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import de.marcely.warpgui.Util;
 import de.marcely.warpgui.Warp;
 import de.marcely.warpgui.main;
 
 public class WarpConfig implements Serializable {
 	private static final long serialVersionUID = -1266449831520034396L;
-	public ArrayList<Warp> warps = new ArrayList<Warp>();
+	public List<Warp> warps = new ArrayList<Warp>();
 	
 	public WarpConfig(){ }
 	
@@ -58,7 +60,22 @@ public class WarpConfig implements Serializable {
 			if(warp.getName().equalsIgnoreCase(name))
 				return warp;
 		}
+		
+		if(Util.existsWarp(name)){
+			Warp warp = new Warp(name, new ItemStack(Material.CLAY_BALL));
+			warps.add(warp);
+			return warp;
+		}
 		return null;
+	}
+	
+	public List<Warp> getWarps(){
+		List<Warp> list = new ArrayList<Warp>();
+		
+		for(String warp:main.es.getWarps().getList())
+			list.add(getWarp(warp));
+		
+		return list;
 	}
 	
 	public ItemStack getIcon(String warpname){
