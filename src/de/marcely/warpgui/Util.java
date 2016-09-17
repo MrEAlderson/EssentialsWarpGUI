@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5.1
+* @version 1.5.3
 * @website http://marcely.de/ 
 */
 
@@ -12,7 +12,6 @@ package de.marcely.warpgui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,10 +29,7 @@ public class Util {
 		for(String warp:main.es.getWarps().getList()){
 			if(hasPermission(player, "essentials.warps." + warp.toLowerCase())){
 				Warp w = main.warps.getWarp(warp);
-				if(w == null)
-					list.add(new Warp(warp, new ItemStack(Material.CLAY_BALL)));
-				else
-					list.add(w);
+				list.add(w);
 			}
 		}
 		return list;
@@ -83,6 +79,9 @@ public class Util {
 		if(sender instanceof Player){
 			
 			Player player = (Player) sender;
+			
+			if(player.isOp()) return true;
+			
 			Boolean bl = Vault.hasPermission(player, permission);
 			if(bl != null)
 				return bl;
@@ -90,5 +89,14 @@ public class Util {
 				return player.hasPermission(permission);
 		}else
 			return true;
+	}
+	
+	public static boolean existsWarp(String warp){
+		for(String w:main.es.getWarps().getList()){
+			if(warp.equals(w))
+				return true;
+		}
+		
+		return false;
 	}
 }
