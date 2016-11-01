@@ -1,9 +1,9 @@
 /**
-* Adds an GUI for the essentials command /warp
+* Adds a GUI for the essentials command /warp
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5.3
+* @version 1.6
 * @website http://marcely.de/ 
 */
 
@@ -35,7 +35,7 @@ public enum Language {
 	Usage_Remove_Prefix(ChatColor.GOLD + "Write " + ChatColor.YELLOW + "{usage} " + ChatColor.GOLD + "to remove the prefix"),
 	Reloaded_Config(ChatColor.GREEN + "The config has been successfully reloaded!"),
 	Teleporting(ChatColor.GOLD + "Teleporting to " + ChatColor.YELLOW + "{warp}" + ChatColor.GOLD + "..."),
-	Teleporting_Secounds(ChatColor.GOLD + "Teleporting to " + ChatColor.YELLOW + "{warp}" + ChatColor.GOLD + " in " + ChatColor.YELLOW + "{secounds}" + ChatColor.GOLD + " secounds..."),
+	Teleporting_Secounds(ChatColor.GOLD + "Teleporting to " + ChatColor.YELLOW + "{warp}" + ChatColor.GOLD + " in " + ChatColor.YELLOW + "{seconds}" + ChatColor.GOLD + " seconds..."),
 	Teleporting_Stopped(ChatColor.RED + "Stopped teleport to " + ChatColor.DARK_RED + "{warp}"),
 	List_Warps(ChatColor.GOLD + "Avaible warps: " + ChatColor.YELLOW + "{warps}"),
 	Info_MadeBy(ChatColor.GREEN + "Made by " + ChatColor.DARK_GREEN + "{info}"),
