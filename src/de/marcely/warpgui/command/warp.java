@@ -1,9 +1,9 @@
 /**
-* Adds an GUI for the essentials command /warp
+* Adds a GUI for the essentials command /warp
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5.3
+* @version 1.6
 * @website http://marcely.de/ 
 */
 
@@ -162,12 +162,12 @@ public class warp implements CommandExecutor {
 			ItemMeta im = is.getItemMeta();
 			
 			// name
-			im.setDisplayName(ChatColor.WHITE + warp.getPrefix() + Util.firstCharCaps(warp.getName()));
+			im.setDisplayName(ChatColor.WHITE + Language.stringToChatColor(warp.getPrefix() + Util.firstCharCaps(warp.getName())));
 			
 			// lores
 			List<String> lores = new ArrayList<String>();
 			for(String lore:warp.getLores())	
-				lores.add(ChatColor.GRAY + lore);
+				lores.add(ChatColor.GRAY + Language.stringToChatColor(lore));
 			im.setLore(lores);
 			
 			is.setItemMeta(im);

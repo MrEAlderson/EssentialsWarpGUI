@@ -1,9 +1,9 @@
 /**
-* Adds an GUI for the essentials command /warp
+* Adds a GUI for the essentials command /warp
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5.3
+* @version 1.6
 * @website http://marcely.de/ 
 */
 
@@ -131,7 +131,14 @@ public class warpcfg implements CommandExecutor {
 							// add lore
 							if(args.length >= 4 && args[2].equalsIgnoreCase("add")){
 								
-								warp.addLore(args[3]);
+								String lore = "";
+								
+								for(int i=3; i<args.length; i++){
+									lore += args[i];
+									if(i - 1 < args.length) lore += " ";
+								}
+								
+								warp.addLore(lore);
 								WarpConfig.save(main.warps);
 								sender.sendMessage(Language.Added_Lore.getMessage().replace("{warp}", warpname));
 								
