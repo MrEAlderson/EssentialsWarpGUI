@@ -1,9 +1,9 @@
 /**
-* Adds an GUI for the essentials command /warp
+* Adds a GUI for the essentials command /warp
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.4
+* @version 1.6
 * @website http://marcely.de/ 
 */
 

@@ -1,9 +1,9 @@
 /**
-* Adds an GUI for the essentials command /warp
+* Adds a GUI for the essentials command /warp
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.5.3
+* @version 1.6
 * @website http://marcely.de/ 
 */
 
@@ -57,7 +57,7 @@ public class WarpConfig implements Serializable {
 	
 	public Warp getWarp(String name){
 		for(Warp warp:warps){
-			if(warp.getName().equalsIgnoreCase(name))
+			if(warp.getName().equals(name))
 				return warp;
 		}
 		
