@@ -10,9 +10,9 @@
       "usage": "/warpadmin"
     }
   }, 
-  "version": 1.2, 
-  "name": "Essentials-Warp_gui", 
+  "version": 1.6.1, 
+  "name": "Essentials_WarpGUI", 
   "author": "Marcely1199", 
-  "main": "de.marcely.warpgui.main", 
+  "main": "de.marcely.warpgui.EssentialsWarpGUI", 
   "description": "A plugin for the command /warp.",
 }
