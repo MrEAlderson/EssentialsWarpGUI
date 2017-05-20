@@ -3,7 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.6
+* @version 1.6.1
 * @website http://marcely.de/ 
 */
 
@@ -79,7 +79,7 @@ public class Warp implements Serializable {
 	}
 	
 	public void warp(Player player){
-		double delay = main.es.getConfig().getDouble("teleport-delay");
+		double delay = EssentialsWarpGUI.es.getConfig().getDouble("teleport-delay");
 		
 		// teleport in delay
 		if(delay > 0){
@@ -92,9 +92,9 @@ public class Warp implements Serializable {
 			}
 			
 			if(Util.isInteger(delay))
-				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", Util.firstCharCaps(getName())).replace("{secounds}", "" + (int) delay));
+				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", Util.firstCharCaps(getName())).replace("{seconds}", "" + (int) delay));
 			else
-				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", Util.firstCharCaps(getName())).replace("{secounds}", "" + delay));
+				player.sendMessage(Language.Teleporting_Secounds.getMessage().replace("{warp}", Util.firstCharCaps(getName())).replace("{seconds}", "" + delay));
 			
 			
 			warpingPlayers.add(WarpingPlayer.create(player, this, (long) delay));
@@ -104,7 +104,7 @@ public class Warp implements Serializable {
 		}else{
 			player.sendMessage(Language.Teleporting.getMessage().replace("{warp}", Util.firstCharCaps(getName())));
 			try{
-				player.teleport(main.es.getWarps().getWarp(getName()));
+				player.teleport(EssentialsWarpGUI.es.getWarps().getWarp(getName()));
 			}catch(Exception e){
 				player.sendMessage(ChatColor.RED + e.getMessage());
 			}
@@ -153,7 +153,7 @@ public class Warp implements Serializable {
 			wp.setTask(new BukkitRunnable(){
 				public void run(){
 					try{
-						player.teleport(main.es.getWarps().getWarp(warp.getName()));
+						player.teleport(EssentialsWarpGUI.es.getWarps().getWarp(warp.getName()));
 					}catch(Exception e){
 						player.sendMessage(ChatColor.RED + e.getMessage());
 					}
@@ -161,7 +161,7 @@ public class Warp implements Serializable {
 				}
 			});
 			
-			wp.getTask().runTaskLater(main.plugin, delay * 20);
+			wp.getTask().runTaskLater(EssentialsWarpGUI.plugin, delay * 20);
 			
 			return wp;
 		}
