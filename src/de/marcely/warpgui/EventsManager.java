@@ -13,8 +13,6 @@ import java.util.Arrays;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
@@ -24,16 +22,6 @@ import de.marcely.warpgui.components.Warp.WarpingPlayer;
 import de.marcely.warpgui.config.ConfigValue;
 
 public class EventsManager implements Listener {
-	
-	@EventHandler
-	public void onInventoryClickEvent(InventoryClickEvent event){
-		
-	}
-	
-	@EventHandler
-	public void onInventoryDragEvent(InventoryDragEvent event){
-		
-	}
 	
 	@EventHandler
 	public void onPlayerMoveEvent(PlayerMoveEvent event){

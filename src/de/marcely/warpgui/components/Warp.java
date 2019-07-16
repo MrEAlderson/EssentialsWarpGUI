@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -80,6 +81,10 @@ public abstract class Warp {
 	
 	public List<String> getLore(){
 		return new ArrayList<>(this.lores);
+	}
+	
+	public Location getTeleportLocation(){
+		return getContainer().getProvider().getWarpLocation(getName());
 	}
 	
 	public void warp(Player player){
@@ -157,16 +162,18 @@ public abstract class Warp {
 			
 			wp.setTask(new BukkitRunnable(){
 				public void run(){
-					/*try{
-						player.teleport(EssentialsWarpGUI.es.getWarps().getWarp(warp.getName()));
+					try{
+						player.teleport(warp.getTeleportLocation());
 					}catch(Exception e){
+						e.printStackTrace();
 						player.sendMessage(ChatColor.RED + e.getMessage());
-					}*/
+					}
+					
 					Warp.warpingPlayers.remove(wp);
 				}
 			});
 			
-			//wp.getTask().runTaskLater(EssentialsWarpGUI.plugin, delay * 20);
+			wp.getTask().runTaskLater(EssentialsWarpGUI.instance, delay * 20);
 			
 			return wp;
 		}

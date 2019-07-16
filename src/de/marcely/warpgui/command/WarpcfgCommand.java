@@ -61,19 +61,4 @@ public class WarpcfgCommand implements CommandExecutor {
 		
 		return null;
 	}
-	
-	
-	
-	public static class SubCommand {
-		
-		@Getter private final String name;
-		@Getter private final String parameter;
-		@Getter private final SubCommandExecutor executor;
-		
-		private SubCommand(String name, String parameter, SubCommandExecutor executor){
-			this.name = name;
-			this.parameter = parameter;
-			this.executor = executor;
-		}
-	}
 }

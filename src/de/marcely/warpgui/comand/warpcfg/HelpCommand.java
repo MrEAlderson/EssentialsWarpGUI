@@ -13,9 +13,9 @@ import org.bukkit.command.CommandSender;
 
 import de.marcely.warpgui.EssentialsWarpGUI;
 import de.marcely.warpgui.Message;
+import de.marcely.warpgui.command.SubCommand;
 import de.marcely.warpgui.command.SubCommandExecutor;
 import de.marcely.warpgui.command.WarpcfgCommand;
-import de.marcely.warpgui.command.WarpcfgCommand.SubCommand;
 
 public class HelpCommand implements SubCommandExecutor {
 	
