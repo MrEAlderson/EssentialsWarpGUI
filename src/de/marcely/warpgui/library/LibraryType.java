@@ -40,6 +40,16 @@ public enum LibraryType {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static @Nullable <T>T get(Class<? extends T> clazz){
+		for(LibraryType type:values()){
+			if(type.instanceClass == clazz)
+				return (T) type.instance;
+		}
+		
+		return null;
+	}
+	
 	public static void initAll(){
 		for(LibraryType type:values()){
 			if(type.getInstance() != null)

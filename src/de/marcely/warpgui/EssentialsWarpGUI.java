@@ -21,6 +21,7 @@ import de.marcely.warpgui.library.WarpsProvider;
 import de.marcely.warpgui.util.Util;
 import lombok.Getter;
 import de.marcely.warpgui.command.WarpCommand;
+import de.marcely.warpgui.command.WarpcfgCommand;
 import de.marcely.warpgui.components.WarpsContainer;
 import de.marcely.warpgui.config.BaseConfig;
 
@@ -56,34 +57,36 @@ public class EssentialsWarpGUI extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new de.marcely.ezgui.EventsManager(), this);
 			
 			getCommand("warp").setExecutor(new WarpCommand());
-			// getCommand("warpcfg").setExecutor(new de.marcely.warpgui.command.warpcfg());
+			getCommand("warpcfg").setExecutor(new WarpcfgCommand());
 		}
 		
-		// prepare filesystem & load configs
-		{
-			for(File folder:Util.getFolders())
-				folder.mkdir();
+		
+		loadConfigs();
+	}
+	
+	public void loadConfigs(){
+		for(File folder:Util.getFolders())
+			folder.mkdir();
+		
+		BaseConfig.load();
+		MessagesConfig.load();
+		WarpsConfig.load();
+		
+		// load&convert old warps if they still exist
+		if(WarpConfig.exists()){
+			getLogger().info("Found old warps! Converting them...");
 			
-			BaseConfig.load();
-			MessagesConfig.load();
-			WarpsConfig.load();
-			
-			// load&convert old warps if they still exist
-			if(WarpConfig.exists()){
-				getLogger().info("Found old warps! Converting them...");
+			{
+				WarpConfig config = WarpConfig.load();
 				
-				{
-					WarpConfig config = WarpConfig.load();
-					
-					for(de.marcely.warpgui.Warp old:config.warps){
-						getLogger().info("Converting the warp '" + old.getName() + "'");
-						this.container.addWarp(old.convertToNew());
-					}
+				for(de.marcely.warpgui.Warp old:config.warps){
+					getLogger().info("Converting the warp '" + old.getName() + "'");
+					this.container.addWarp(old.convertToNew());
 				}
-				
-				Util.FILE_CONFIG_WARPS_OLD.delete();
-				WarpsConfig.save();
 			}
+			
+			Util.FILE_CONFIG_WARPS_OLD.delete();
+			WarpsConfig.save();
 		}
 	}
 	

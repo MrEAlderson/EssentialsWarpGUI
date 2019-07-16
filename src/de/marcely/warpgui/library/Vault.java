@@ -18,9 +18,9 @@ import net.milkbowl.vault.permission.Permission;
 
 public class Vault implements Library {
 	
-    public static Economy economy = null;
-    public static Permission permission = null;
-    public static Chat chat = null;
+    public Economy economy = null;
+    public Permission permission = null;
+    public Chat chat = null;
     
     @Override
 	public LibraryType getType(){
@@ -46,22 +46,23 @@ public class Vault implements Library {
 	@Override
 	public void unload(){ }
 	
-	public static void giveMoney(Player player, double amount){
+	public void giveMoney(Player player, double amount){
 		if(economy != null && economy.isEnabled())
 			economy.depositPlayer(player, amount);
 	}
 	
-	public static Boolean hasPermission(Player player, String perm){
+	public Boolean hasPermission(Player player, String perm){
 		if(permission != null && permission.isEnabled())
 			return permission.has(player, perm);
+		
 		return null;
 	}
 	
-	public static String getPrefix(Player player){
+	public String getPrefix(Player player){
 		return getPrefix(player, false);
 	}
 	
-	public static String getPrefix(Player player, boolean returnEmpty){
+	public String getPrefix(Player player, boolean returnEmpty){
 		if(!returnEmpty && chat != null && chat.getPlayerPrefix(player) != null)
 			return chat.getPlayerPrefix(player);
 		

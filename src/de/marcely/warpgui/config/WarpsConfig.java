@@ -20,9 +20,11 @@ import de.marcely.warpgui.util.Util;
 
 public class WarpsConfig {
 	
-	public static EZConfigManager cm = new EZConfigManager(Util.FILE_CONFIG_WARPS, false);
+	public static EZConfigManager cm = new EZConfigManager(Util.FILE_CONFIG_WARPS, true);
 	
 	public static void load(){
+		EssentialsWarpGUI.instance.getContainer().removeAllWarps();
+		
 		cm.load();
 		
 		for(Tree warpTree:cm.getRootTree().getTreeChilds()){
@@ -34,9 +36,11 @@ public class WarpsConfig {
 			
 			// load base configs
 			{
+				final Config config_icon = warpTree.getConfigChild("icon");
 				final Config config_prefix = warpTree.getConfigChild("prefix");
 				final Config config_suffix = warpTree.getConfigChild("suffix");
 				
+				if(config_icon != null) warp.setIcon(ItemStackUtil.ofString(config_icon.getValue()));
 				if(config_prefix != null) warp.setPrefix(config_prefix.getValue());
 				if(config_suffix != null) warp.setSuffix(config_suffix.getValue());
 			}

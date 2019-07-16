@@ -25,16 +25,13 @@ public class BaseConfig {
 		
 		manager.load();
 		
-		final String version = manager.getConfigString("config-version");
+		final String version = manager.getDescription("config-version");
 		final String invtitle = manager.getConfigString("inv-title");
-		final Boolean firstcharcaps = manager.getConfigBoolean("first-char-caps");
 		final Boolean incl_warps = manager.getConfigBoolean("includecmd-warps");
 		
 		{
 			if(invtitle != null)
 				ConfigValue.inventory_title = StringUtil.readableStringToFormattedChatColor(invtitle);
-			if(firstcharcaps != null)
-				ConfigValue.first_char_caps = firstcharcaps;
 			if(incl_warps != null)
 				ConfigValue.include_command_warps = incl_warps;
 		}
@@ -45,18 +42,12 @@ public class BaseConfig {
 	
 	public static void save(){
 		manager.clear();
-		manager.addComment("Don't change this");
-		manager.addConfig("config-version", EssentialsWarpGUI.getVersion());
+		manager.addDescription("config-version", EssentialsWarpGUI.getVersion());
 		
 		manager.addEmptyLine();
 		
 		manager.addComment("Set the title from the inventory");
 		manager.addConfig("inv-title", StringUtil.formattedChatColorStringToReadable(ConfigValue.inventory_title));
-		
-		manager.addEmptyLine();
-		
-		manager.addComment("If it's enabled, the first character in the name of the warp is in caps");
-		manager.addConfig("first-char-caps", ConfigValue.first_char_caps);
 		
 		manager.addEmptyLine();
 		

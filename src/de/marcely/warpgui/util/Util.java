@@ -13,7 +13,7 @@ import java.io.File;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.marcely.warpgui.config.ConfigValue;
+import de.marcely.warpgui.library.LibraryType;
 import de.marcely.warpgui.library.Vault;
 
 public class Util {
@@ -31,12 +31,6 @@ public class Util {
 		return new File[]{ FOLDER_BASE };
 	}
 	
-	public static String firstCharCaps(String str){
-		if(ConfigValue.first_char_caps == true)
-			return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-		return str;
-	}
-	
 	public static boolean isInteger(String str){
 		try{
 			Integer.valueOf(str);
@@ -50,18 +44,17 @@ public class Util {
 	}
 	
 	public static boolean hasPermission(CommandSender sender, String permission){
-		if(sender instanceof Player){
-			final Player player = (Player) sender;
-			
-			if(player.isOp())
-				return true;
-			
-			Boolean bl = Vault.hasPermission(player, permission);
-			if(bl != null)
-				return bl;
-			else
-				return Vault.hasPermission(player, permission);
-		}else
+		if(sender.isOp())
 			return true;
+		if(!(sender instanceof Player))
+			return false;
+			
+		final Player player = (Player) sender;
+		final Vault vault = LibraryType.get(Vault.class);
+		
+		if(vault != null && vault.hasPermission(player, permission))
+			return true;
+		
+		return false;
 	}
 }

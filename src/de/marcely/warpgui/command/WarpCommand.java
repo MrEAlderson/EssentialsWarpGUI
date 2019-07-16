@@ -1,3 +1,11 @@
+/**
+* Adds a GUI for the essentials command /warp
+* https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
+*
+* @author  Marcely1199
+* @website https://marcely.de/ 
+*/
+
 package de.marcely.warpgui.command;
 
 import java.util.ArrayList;
@@ -77,7 +85,7 @@ public class WarpCommand implements CommandExecutor {
 		EssentialsWarpGUI.instance.getContainer().synchronizeWithProvider(); // TODO Make it less
 		
 		final List<Warp> warps = new ArrayList<>(EssentialsWarpGUI.instance.getContainer().getWarps(player));
-		final int maxPerPage = 2;
+		final int maxPerPage = 4*9;
 		
 		if(warps.size() - maxPerPage*(page-1) <= 0)
 			return false;
@@ -105,11 +113,21 @@ public class WarpCommand implements CommandExecutor {
 					
 					name.append(warp.getName());
 					
+					if(warp.getSuffix() != null)
+						name.append(warp.getSuffix());
+					
 					im.setDisplayName(StringUtil.readableStringToFormattedChatColor(name.toString()));
 				}
 				
 				// add lore
-				im.setLore(warp.getLore());
+				{
+					final List<String> newLore = new ArrayList<>(warp.getLore().size());
+					
+					for(String lore:warp.getLore())
+						newLore.add(StringUtil.readableStringToFormattedChatColor(lore));
+					
+					im.setLore(newLore);
+				}
 				
 				icon.setItemMeta(im);
 			}

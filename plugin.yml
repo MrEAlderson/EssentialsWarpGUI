@@ -1,18 +1,14 @@
-{
-  "website": "http://marcely.de", 
-  "commands": {
-    "warp": {
-      "description": "Essentials /warp with gui.",
-      "usage": "/warp"
-    },
-     "warpcfg": {
-      "description": "Configurations for /warp GUI.",
-      "usage": "/warpadmin"
-    }
-  }, 
-  "version": 1.6.1, 
-  "name": "Essentials_WarpGUI", 
-  "author": "Marcely1199", 
-  "main": "de.marcely.warpgui.EssentialsWarpGUI", 
-  "description": "A plugin for the command /warp.",
-}
+website: https://marcely.de
+version: 2.0
+name: Essentials_WarpGUI
+author: Marcely1199
+main: de.marcely.warpgui.EssentialsWarpGUI
+description: Adds a GUI to the /warp command
+
+commands:
+    warp:
+      description: Essentials /warp with gui
+      usage: /warp
+    warpcfg:
+      description: Configurations for the /warp GUI
+      usage: /warpcfg

@@ -70,6 +70,10 @@ public abstract class Warp {
 		return this.lores.remove(lore);
 	}
 	
+	public void removeLore(int line){
+		this.lores.remove(line-1);
+	}
+	
 	public void removeAllLore(){
 		this.lores.clear();
 	}
@@ -92,9 +96,9 @@ public abstract class Warp {
 			}
 			
 			if(Util.isInteger(delay))
-				player.sendMessage(Message.Teleporting_Secounds.getValue().replace("{warp}", Util.firstCharCaps(getName())).replace("{seconds}", "" + (int) delay));
+				player.sendMessage(Message.Teleporting_Secounds.getValue().replace("{warp}", getName()).replace("{seconds}", "" + (int) delay));
 			else
-				player.sendMessage(Message.Teleporting_Secounds.getValue().replace("{warp}", Util.firstCharCaps(getName())).replace("{seconds}", "" + delay));
+				player.sendMessage(Message.Teleporting_Secounds.getValue().replace("{warp}", getName()).replace("{seconds}", "" + delay));
 			
 			
 			warpingPlayers.add(WarpingPlayer.create(player, this, (long) delay));
@@ -102,7 +106,7 @@ public abstract class Warp {
 			
 		// teleport instantly
 		}else{
-			player.sendMessage(Message.Teleporting.getValue().replace("{warp}", Util.firstCharCaps(getName())));
+			player.sendMessage(Message.Teleporting.getValue().replace("{warp}", getName()));
 			
 			try{
 				player.teleport(EssentialsWarpGUI.instance.getContainer().getProvider().getWarpLocation(getName()));

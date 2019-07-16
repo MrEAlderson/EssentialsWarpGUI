@@ -25,4 +25,19 @@ public class StringUtil {
 		
 		return str;
 	}
+	
+	public static String join(CharSequence delimiter, CharSequence... elements){
+		Validate.checkNotNull(delimiter);
+		
+		String result = "";
+		
+		for(int i=0; i<elements.length; i++){
+			result += elements[i];
+			
+			if(i+1 < elements.length)
+				result += delimiter;
+		}
+		
+		return result;
+	}
 }

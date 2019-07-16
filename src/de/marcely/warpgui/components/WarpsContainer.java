@@ -45,6 +45,10 @@ public class WarpsContainer {
 		this.warps.remove(warp.getName());
 	}
 	
+	public void removeAllWarps(){
+		this.warps.clear();
+	}
+	
 	public void addWarp(Warp warp){
 		this.warps.put(warp.getName().toLowerCase(), warp);
 	}
