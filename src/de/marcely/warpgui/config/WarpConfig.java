@@ -3,13 +3,11 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.6
-* @website http://marcely.de/ 
+* @website https://marcely.de/ 
 */
 
 package de.marcely.warpgui.config;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,20 +18,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
-import de.marcely.warpgui.Util;
 import de.marcely.warpgui.Warp;
-import de.marcely.warpgui.main;
+import de.marcely.warpgui.util.Util;
 
+@Deprecated
 public class WarpConfig implements Serializable {
+	
 	private static final long serialVersionUID = -1266449831520034396L;
+	
 	public List<Warp> warps = new ArrayList<Warp>();
 	
 	public WarpConfig(){ }
 	
-	public void addLore(String warpname, String lore){
+	/*public void addLore(String warpname, String lore){
 		getWarp(warpname).addLore(lore);
 	}
 	
@@ -72,7 +69,7 @@ public class WarpConfig implements Serializable {
 	public List<Warp> getWarps(){
 		List<Warp> list = new ArrayList<Warp>();
 		
-		for(String warp:main.es.getWarps().getList())
+		for(String warp:EssentialsWarpGUI.es.getWarps().getList())
 			list.add(getWarp(warp));
 		
 		return list;
@@ -88,16 +85,16 @@ public class WarpConfig implements Serializable {
 	
 	public boolean contains(String warpname){
 		return getWarp(warpname) != null;
-	}
+	}*/
 	
 	public static boolean exists(){
-		return new File("plugins/" + main.plugin.getName() + "/warps.cfg").exists();
+		return Util.FILE_CONFIG_WARPS_OLD.exists();
 	}
 	
 	public static WarpConfig load(){
 		FileInputStream file = null;
 		try {
-			file = new FileInputStream("plugins/" + main.plugin.getName() + "/warps.cfg");
+			file = new FileInputStream(Util.FILE_CONFIG_WARPS_OLD);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -127,7 +124,7 @@ public class WarpConfig implements Serializable {
 	public static void save(WarpConfig config){
 		FileOutputStream file = null;
 		try {
-			file = new FileOutputStream("plugins/" + main.plugin.getName() + "/warps.cfg");
+			file = new FileOutputStream(Util.FILE_CONFIG_WARPS_OLD);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

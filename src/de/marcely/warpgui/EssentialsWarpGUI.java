@@ -3,8 +3,7 @@
 * https://www.spigotmc.org/resources/essentials-warp-gui-opensource.13571/
 *
 * @author  Marcely1199
-* @version 1.6
-* @website http://marcely.de/ 
+* @website https://marcely.de/ 
 */
 
 package de.marcely.warpgui;
@@ -12,105 +11,83 @@ package de.marcely.warpgui;
 import java.io.File;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.marcely.warpgui.Warp.WarpingPlayer;
-import de.marcely.warpgui.command.warp;
-import de.marcely.warpgui.config.LanguageConfig;
+import de.marcely.warpgui.config.MessagesConfig;
 import de.marcely.warpgui.config.WarpConfig;
-import de.marcely.warpgui.config.Config;
-import net.ess3.api.IEssentials;
+import de.marcely.warpgui.config.WarpsConfig;
+import de.marcely.warpgui.library.LibraryType;
+import de.marcely.warpgui.library.WarpsProvider;
+import de.marcely.warpgui.util.Util;
+import lombok.Getter;
+import de.marcely.warpgui.command.WarpCommand;
+import de.marcely.warpgui.components.WarpsContainer;
+import de.marcely.warpgui.config.BaseConfig;
 
+@SuppressWarnings("deprecation")
 public class EssentialsWarpGUI extends JavaPlugin {	
-	public static Plugin plugin;
 	
-	public static IEssentials es = null;
+	public static EssentialsWarpGUI instance;
 	
-	public static String CONFIG_INVTITLE = ChatColor.DARK_AQUA + "Warps";
-	public static boolean CONFIG_FIRSTCHARCAPS = false;
-	public static boolean CONFIG_INCLCMD_WARPS = true;
-	
-	public static WarpConfig warps = new WarpConfig();
+	@Getter private WarpsContainer container;
 	
 	public void onEnable(){
-		plugin = this;
+		instance = this;
 		
-		// get essentials variable
-		es = (IEssentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
-		if(es == null) // if he isn't using the spigot version of spigot
-			es = (IEssentials) Bukkit.getServer().getPluginManager().getPlugin("EssentialsX");
-		if(es == null) // he isn't using essentials or essentialsX
-			new NullPointerException("You aren't using the spigot version of Essentials!").printStackTrace();
+		LibraryType.initAll();
 		
-		// setup
-		getServer().getPluginManager().registerEvents(listener, this);
-		getCommand("warp").setExecutor(new de.marcely.warpgui.command.warp());
-		getCommand("warpcfg").setExecutor(new de.marcely.warpgui.command.warpcfg());
+		// search for provider & create container
+		{
+			final WarpsProvider provider = LibraryType.findInstanceWithInterface(WarpsProvider.class);
+			
+			if(provider == null){
+				this.getLogger().warning("An error occured: Failed to find a proper provider for the warps (Essentials is missing). Stopping the plugin");
+				Bukkit.getPluginManager().disablePlugin(this);
+				
+				return;
+			}
+			
+			this.container = new WarpsContainer(provider);
+		}
 		
-		// load config
-		File dir = new File("plugins/Essentials_WarpGUI");
-		if(!dir.exists()) dir.mkdir();
+		// register listener & commands
+		{
+			getServer().getPluginManager().registerEvents(new EventsManager(), this);
+			getServer().getPluginManager().registerEvents(new de.marcely.ezgui.EventsManager(), this);
+			
+			getCommand("warp").setExecutor(new WarpCommand());
+			// getCommand("warpcfg").setExecutor(new de.marcely.warpgui.command.warpcfg());
+		}
 		
-		Config.load();
-		LanguageConfig.load();
-		if(WarpConfig.exists()) warps = WarpConfig.load();
+		// prepare filesystem & load configs
+		{
+			for(File folder:Util.getFolders())
+				folder.mkdir();
+			
+			BaseConfig.load();
+			MessagesConfig.load();
+			WarpsConfig.load();
+			
+			// load&convert old warps if they still exist
+			if(WarpConfig.exists()){
+				getLogger().info("Found old warps! Converting them...");
+				
+				{
+					WarpConfig config = WarpConfig.load();
+					
+					for(de.marcely.warpgui.Warp old:config.warps){
+						getLogger().info("Converting the warp '" + old.getName() + "'");
+						this.container.addWarp(old.convertToNew());
+					}
+				}
+				
+				Util.FILE_CONFIG_WARPS_OLD.delete();
+				WarpsConfig.save();
+			}
+		}
 	}
 	
-	private Listener listener = new Listener(){
-		@EventHandler
-		public void onInventoryClickEvent(InventoryClickEvent event){
-			warp.onInventoryClickEvent(event);
-		}
-		
-		@EventHandler
-		public void onInventoryDragEvent(InventoryDragEvent event){
-			warp.onInventoryDragEvent(event);
-		}
-		
-		@EventHandler
-		public void onPlayerMoveEvent(PlayerMoveEvent event){
-			Location from = event.getFrom();
-			Location to = event.getTo();
-			
-			if(from.getBlockX() == to.getBlockX() &&
-			   from.getBlockZ() == to.getBlockZ() &&
-			   from.distance(to) < 0.42)
-			return;
-			
-			WarpingPlayer wp = Warp.getWarpingPlayer(event.getPlayer());
-			
-			if(wp != null){
-				event.getPlayer().sendMessage(Language.Teleporting_Stopped.getMessage().replace("{warp}", wp.getWarp().getName()));
-				wp.cancel();
-			}
-		}
-		
-		@EventHandler
-		public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
-			String[] strs = event.getMessage().split(" ");
-			String label = strs[0].replace("/", "");
-			String[] args = new String[strs.length - 1];
-			
-			for(int i=1; i<strs.length; i++)
-				args[i - 1] = strs[i];
-			
-			if(CONFIG_INCLCMD_WARPS && label.equalsIgnoreCase("warps")){
-				warp.onCommand(event.getPlayer(), label, args);
-				event.setCancelled(true);
-			}
-		}
-	};
-	
 	public static String getVersion(){
-		return plugin.getDescription().getVersion();
+		return instance.getDescription().getVersion();
 	}
 }
