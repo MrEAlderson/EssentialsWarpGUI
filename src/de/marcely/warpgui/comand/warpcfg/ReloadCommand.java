@@ -18,7 +18,7 @@ public class ReloadCommand implements SubCommandExecutor {
 
 	@Override
 	public void onInvoke(CommandSender sender, String label, String[] args){
-		EssentialsWarpGUI.instance.reloadConfig();
+		EssentialsWarpGUI.instance.loadConfigs();
 		
 		sender.sendMessage(Message.Reloaded_Config.getValue());
 	}
