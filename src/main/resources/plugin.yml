@@ -4,6 +4,7 @@ name: Essentials_WarpGUI
 author: Marcely1199
 main: de.marcely.warpgui.EssentialsWarpGUI
 description: Adds a GUI to the /warp command
+api-version: 1.13
 
 commands:
     warp:

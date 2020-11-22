@@ -13,7 +13,8 @@ import org.bukkit.Material;
 public class MaterialUtil {
 	
 	public static Material ofString(String str){
-		if(str.equalsIgnoreCase("dye")) return Material.INK_SACK;
+		if(str.equalsIgnoreCase("dye"))
+			return ItemStackUtil.INK_SAC.getType();
 		
 		for(Material m:Material.values()){
 			if(m.name().equalsIgnoreCase(str) ||

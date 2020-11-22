@@ -20,7 +20,26 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import de.marcely.warpgui.version.Version;
+
 public class ItemStackUtil {
+	
+	public static ItemStack BLACK_STAINED_GLASS_PANE, LIME_STAINED_GLASS_PANE, INK_SAC, PLAYER_HEAD;
+	
+	public static void init(){
+		if(Version.getCurrent().getMinor() >= 13){
+			BLACK_STAINED_GLASS_PANE = new ItemStack(Material.valueOf("BLACK_STAINED_GLASS_PANE"));
+			LIME_STAINED_GLASS_PANE = new ItemStack(Material.valueOf("LIME_STAINED_GLASS_PANE"));
+			INK_SAC = new ItemStack(Material.valueOf("INK_SAC"));
+			PLAYER_HEAD = new ItemStack(Material.valueOf("PLAYER_HEAD"));
+			
+		}else{
+			BLACK_STAINED_GLASS_PANE = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+			LIME_STAINED_GLASS_PANE = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5);
+			INK_SAC = new ItemStack(Material.valueOf("INK_SACK"));
+			PLAYER_HEAD = new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (short) 3);
+		}
+	}
 	
 	public static ItemStack rename(ItemStack is, String name){
 		final ItemMeta im = is.getItemMeta();
@@ -46,13 +65,14 @@ public class ItemStackUtil {
 		ItemStack is = new ItemStack(Material.STONE, 1);
 		
 		// first the type
-		if(Util.isInteger(n)){
+		if(Version.getCurrent().getMinor() <= 12 && Util.isInteger(n)){
 			final Material m = Material.getMaterial(Integer.valueOf(n));
 			
 			if(m != null)
 				is.setType(m);
 			else
 				return null;
+		
 		}else{
 			final Material m = MaterialUtil.ofString(n);
 			
@@ -86,19 +106,6 @@ public class ItemStackUtil {
 						is.setDurability((short) (int)Integer.valueOf(strs[1]));
 				}
 				break;
-			
-				case SKULL_ITEM:
-				{
-					if(strs[1].length() >= 3){
-						final SkullMeta sm = (SkullMeta) is.getItemMeta();
-						
-						is.setDurability((short) 3);
-						sm.setOwner(strs[1]);
-						is.setItemMeta(sm);
-					
-					}
-				}
-				break;
 				
 				case LEATHER_HELMET:
 				case LEATHER_CHESTPLATE:
@@ -113,13 +120,26 @@ public class ItemStackUtil {
 					return is;
 				}
 				
-				default: break;
+				default:
+					if(is.getType() == PLAYER_HEAD.getType()){
+						if(strs[1].length() >= 3){
+							final SkullMeta sm = (SkullMeta) is.getItemMeta();
+							
+							is.setDurability((short) 3);
+							sm.setOwner(strs[1]);
+							is.setItemMeta(sm);
+						
+						}
+					}
+					
+					break;
 			}
 		}
 		
 		return is;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String toString(ItemStack is){
 		if(is == null)
 			return "null";
@@ -140,15 +160,6 @@ public class ItemStackUtil {
 		}
 		break;
 		
-		case SKULL_ITEM:
-		{
-			if(is.getDurability() == (short) 3){
-				return is.getType().name().toLowerCase()
-						+ ":" + ((SkullMeta) is.getItemMeta()).getOwner();
-			}
-		}
-		break;
-		
 		case LEATHER_HELMET:
 		case LEATHER_CHESTPLATE:
 		case LEATHER_LEGGINGS:
@@ -162,7 +173,13 @@ public class ItemStackUtil {
 			}
 		}
 		
-		default: break;
+		default:
+			if(is.getType() == PLAYER_HEAD.getType()){
+				return is.getType().name().toLowerCase()
+						+ ":" + ((SkullMeta) is.getItemMeta()).getOwner();
+			}
+			
+			break;
 		}
 		
 		return is.getType().name().toLowerCase() + ":" + is.getDurability();

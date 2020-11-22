@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -146,11 +145,11 @@ public class WarpCommand implements CommandExecutor {
 			gui.setHeight(6);
 			
 			for(int ix=0; ix<9; ix++)
-				gui.setItemAt(new DecGUIItem(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 15)), ix, 4);
+				gui.setItemAt(new DecGUIItem(ItemStackUtil.BLACK_STAINED_GLASS_PANE.clone()), ix, 4);
 			
 			// go back
 			if(page >= 2){
-				gui.setItemAt(new GUIItem(ItemStackUtil.rename(new ItemStack(Material.STAINED_CLAY, 1, (short) 5), ChatColor.GREEN + "<--")){
+				gui.setItemAt(new GUIItem(ItemStackUtil.rename(ItemStackUtil.LIME_STAINED_GLASS_PANE.clone(), ChatColor.GREEN + "<--")){
 					public void onClick(Player whoClicked, boolean leftClick, boolean shiftClick){
 						openGUI(player, page-1);
 					}
@@ -159,7 +158,7 @@ public class WarpCommand implements CommandExecutor {
 			
 			// go forward
 			if(warps.size() - maxPerPage*(page) > 0){
-				gui.setItemAt(new GUIItem(ItemStackUtil.rename(new ItemStack(Material.STAINED_CLAY, 1, (short) 5), ChatColor.GREEN + "-->")){
+				gui.setItemAt(new GUIItem(ItemStackUtil.rename(ItemStackUtil.LIME_STAINED_GLASS_PANE.clone(), ChatColor.GREEN + "-->")){
 					public void onClick(Player whoClicked, boolean leftClick, boolean shiftClick){
 						openGUI(player, page+1);
 					}

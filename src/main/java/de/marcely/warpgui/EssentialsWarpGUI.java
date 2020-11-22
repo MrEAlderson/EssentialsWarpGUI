@@ -18,6 +18,7 @@ import de.marcely.warpgui.config.WarpConfig;
 import de.marcely.warpgui.config.WarpsConfig;
 import de.marcely.warpgui.library.LibraryType;
 import de.marcely.warpgui.library.WarpsProvider;
+import de.marcely.warpgui.util.ItemStackUtil;
 import de.marcely.warpgui.util.Util;
 import de.marcely.warpgui.version.Version;
 import lombok.Getter;
@@ -40,6 +41,7 @@ public class EssentialsWarpGUI extends JavaPlugin {
 		if(!Version.init(this))
 			return;
 		
+		ItemStackUtil.init();
 		LibraryType.initAll();
 		
 		// search for provider & create container
