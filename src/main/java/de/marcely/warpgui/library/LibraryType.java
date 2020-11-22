@@ -50,6 +50,7 @@ public enum LibraryType {
 		return null;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void initAll(){
 		for(LibraryType type:values()){
 			if(type.getInstance() != null)
