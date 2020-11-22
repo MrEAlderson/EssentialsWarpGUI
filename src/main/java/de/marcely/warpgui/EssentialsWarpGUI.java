@@ -19,6 +19,7 @@ import de.marcely.warpgui.config.WarpsConfig;
 import de.marcely.warpgui.library.LibraryType;
 import de.marcely.warpgui.library.WarpsProvider;
 import de.marcely.warpgui.util.Util;
+import de.marcely.warpgui.version.Version;
 import lombok.Getter;
 import de.marcely.warpgui.command.WarpCommand;
 import de.marcely.warpgui.command.WarpcfgCommand;
@@ -34,6 +35,10 @@ public class EssentialsWarpGUI extends JavaPlugin {
 	
 	public void onEnable(){
 		instance = this;
+		
+		// try to fetch version
+		if(!Version.init(this))
+			return;
 		
 		LibraryType.initAll();
 		
