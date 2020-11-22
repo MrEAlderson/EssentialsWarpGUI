@@ -2,7 +2,7 @@ package de.marcely.warpgui.command;
 
 import java.util.Arrays;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

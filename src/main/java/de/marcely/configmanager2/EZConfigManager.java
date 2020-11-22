@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import de.marcely.configmanager2.objects.Config;
 import de.marcely.configmanager2.objects.Description;

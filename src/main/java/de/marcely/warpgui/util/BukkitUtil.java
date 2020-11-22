@@ -1,6 +1,6 @@
 package de.marcely.warpgui.util;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Color;
 import org.bukkit.potion.PotionEffectType;

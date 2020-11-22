@@ -3,7 +3,7 @@ package de.marcely.configmanager2.objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import de.marcely.configmanager2.ConfigContainer;
 import lombok.Getter;
