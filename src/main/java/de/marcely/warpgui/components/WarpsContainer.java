@@ -8,16 +8,15 @@
 
 package de.marcely.warpgui.components;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 
 import de.marcely.warpgui.library.WarpsProvider;
-import de.marcely.warpgui.util.Util;
 import de.marcely.warpgui.util.Validate;
 import lombok.Getter;
 
@@ -77,19 +76,9 @@ public class WarpsContainer {
 		this.warps = newWarps;
 	}
 	
-	public Collection<Warp> getWarps(Player player){
-		if(Util.hasPermission(player, "essentials.warps.*"))
-			return getWarps();
-		
-		final List<Warp> list = new ArrayList<Warp>(this.warps.size());
-		
-		for(Warp warp:getWarps()){
-			if(!Util.hasPermission(player, "essentials.warps." + warp.getName().toLowerCase()))
-				continue;
-			
-			list.add(warp);
-		}
-		
-		return list;
+	public List<Warp> getWarps(Player player){
+		return getWarps().stream()
+				.filter(warp -> warp.hasUsePermission(player))
+				.collect(Collectors.toList());
 	}
 }

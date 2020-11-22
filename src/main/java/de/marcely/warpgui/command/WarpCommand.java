@@ -28,7 +28,6 @@ import de.marcely.warpgui.components.Warp;
 import de.marcely.warpgui.config.ConfigValue;
 import de.marcely.warpgui.util.ItemStackUtil;
 import de.marcely.warpgui.util.StringUtil;
-import de.marcely.warpgui.util.Util;
 
 public class WarpCommand implements CommandExecutor {
 	
@@ -63,8 +62,7 @@ public class WarpCommand implements CommandExecutor {
 				return;
 			}
 			
-			if(!Util.hasPermission(sender, "essentials.warps." + warp.getName().toLowerCase()) &&
-			   !Util.hasPermission(sender, "essentials.warps.*")){
+			if(!warp.hasUsePermission(sender)){
 				sender.sendMessage(Message.No_Permissions.getValue());
 				
 				return;
@@ -83,7 +81,7 @@ public class WarpCommand implements CommandExecutor {
 	public static boolean openGUI(final Player player, final int page){
 		EssentialsWarpGUI.instance.getContainer().synchronizeWithProvider(); // TODO Make it less
 		
-		final List<Warp> warps = new ArrayList<>(EssentialsWarpGUI.instance.getContainer().getWarps(player));
+		final List<Warp> warps = EssentialsWarpGUI.instance.getContainer().getWarps(player);
 		final int maxPerPage = 4*9;
 		
 		if(warps.size() - maxPerPage*(page-1) <= 0)

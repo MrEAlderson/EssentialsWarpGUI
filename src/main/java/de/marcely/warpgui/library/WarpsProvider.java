@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 
 public interface WarpsProvider {
 	
@@ -17,4 +18,6 @@ public interface WarpsProvider {
 	public void removeWarp(String name);
 	
 	public void addWarp(String name, Location loc);
+	
+	public boolean hasUsePermission(CommandSender sender, String warpName);
 }

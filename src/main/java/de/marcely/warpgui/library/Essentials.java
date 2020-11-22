@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 
 import com.earth2me.essentials.IEssentials;
 import com.earth2me.essentials.commands.WarpNotFoundException;
@@ -64,5 +65,10 @@ public class Essentials implements Library, WarpsProvider {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean hasUsePermission(CommandSender sender, String warpName){
+		return !this.plugin.getSettings().getPerWarpPermission() || sender.hasPermission("essentials.warps." + warpName);
 	}
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -119,6 +120,10 @@ public abstract class Warp {
 				player.sendMessage(ChatColor.RED + e.getMessage());
 			}
 		}
+	}
+	
+	public boolean hasUsePermission(CommandSender sender){
+		return this.getContainer().getProvider().hasUsePermission(sender, this.getName());
 	}
 	
 	public static WarpingPlayer getWarpingPlayer(Player player){
