@@ -2,7 +2,7 @@ package de.marcely.warpgui.library;
 
 import org.bukkit.Bukkit;
 
-import com.earth2me.essentials.IEssentials;
+import net.ess3.api.IEssentials;
 
 public class EssentialsX extends Essentials {
 	
@@ -14,5 +14,7 @@ public class EssentialsX extends Essentials {
 	@Override
 	public void load(){
 		this.plugin = (IEssentials) Bukkit.getServer().getPluginManager().getPlugin("EssentialsX");
+		
+		init();
 	}
 }

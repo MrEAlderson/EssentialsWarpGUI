@@ -40,9 +40,6 @@ public enum Message {
 	Usage_Change_Suffix(ChatColor.GOLD + "Write " + ChatColor.YELLOW + "{usage} " + ChatColor.GOLD + "to change the suffix"),
 	Usage_Remove_Suffix(ChatColor.GOLD + "Write " + ChatColor.YELLOW + "{usage} " + ChatColor.GOLD + "to remove the suffix"),
 	Reloaded_Config(ChatColor.GREEN + "The config has been successfully reloaded!"),
-	Teleporting(ChatColor.GOLD + "Teleporting to " + ChatColor.YELLOW + "{warp}" + ChatColor.GOLD + "..."),
-	Teleporting_Secounds(ChatColor.GOLD + "Teleporting to " + ChatColor.YELLOW + "{warp}" + ChatColor.GOLD + " in " + ChatColor.YELLOW + "{seconds}" + ChatColor.GOLD + " seconds..."),
-	Teleporting_Stopped(ChatColor.RED + "Stopped teleport to " + ChatColor.DARK_RED + "{warp}"),
 	List_Warps(ChatColor.GOLD + "Available warps: " + ChatColor.YELLOW + "{warps}"),
 	Info_MadeBy(ChatColor.GREEN + "Made by " + ChatColor.DARK_GREEN + "{info}"),
 	Info_Version(ChatColor.GREEN + "Version " + ChatColor.DARK_GREEN + "{info}");

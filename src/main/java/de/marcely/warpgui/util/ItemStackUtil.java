@@ -61,30 +61,25 @@ public class ItemStackUtil {
 	public static ItemStack ofString(String name){
 		final String[] strs = name.split("\\:");
 		final String n = strs[0];
+		Material mat = null;
 		
-		ItemStack is = new ItemStack(Material.STONE, 1);
+		// first the material
+		if(Version.getCurrent().getMinor() <= 12 && Util.isInteger(n))
+			mat = Material.getMaterial(Integer.valueOf(n));
 		
-		// first the type
-		if(Version.getCurrent().getMinor() <= 12 && Util.isInteger(n)){
-			final Material m = Material.getMaterial(Integer.valueOf(n));
-			
-			if(m != null)
-				is.setType(m);
-			else
-				return null;
+		else
+			mat = MaterialUtil.ofString(n);
 		
-		}else{
-			final Material m = MaterialUtil.ofString(n);
-			
-			if(m != null)
-				is.setType(m);
-			else
-				return null;
-		}
+		if(mat == null)
+			return null;
+		
+		mat = MaterialUtil.getItemVariant(mat);
+		
+		ItemStack is = new ItemStack(mat);
 		
 		// then the durability (like potion, mobspawner...)
 		if(strs.length >= 2){
-			switch(is.getType()){
+			switch(mat){
 				case POTION:
 				{
 					if(strs.length >= 4){
@@ -128,7 +123,6 @@ public class ItemStackUtil {
 							is.setDurability((short) 3);
 							sm.setOwner(strs[1]);
 							is.setItemMeta(sm);
-						
 						}
 					}
 					

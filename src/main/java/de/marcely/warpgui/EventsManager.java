@@ -10,36 +10,14 @@ package de.marcely.warpgui;
 
 import java.util.Arrays;
 
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 import de.marcely.warpgui.command.WarpCommand;
-import de.marcely.warpgui.components.Warp;
-import de.marcely.warpgui.components.Warp.WarpingPlayer;
 import de.marcely.warpgui.config.ConfigValue;
 
 public class EventsManager implements Listener {
-	
-	@EventHandler
-	public void onPlayerMoveEvent(PlayerMoveEvent event){
-		final Location from = event.getFrom();
-		final Location to = event.getTo();
-		
-		if(from.getBlockX() == to.getBlockX() &&
-		   from.getBlockZ() == to.getBlockZ() &&
-		   from.distance(to) < 0.42)
-		return;
-		
-		WarpingPlayer wp = Warp.getWarpingPlayer(event.getPlayer());
-		
-		if(wp != null){
-			event.getPlayer().sendMessage(Message.Teleporting_Stopped.getValue().replace("{warp}", wp.getWarp().getName()));
-			wp.cancel();
-		}
-	}
 	
 	@EventHandler
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
