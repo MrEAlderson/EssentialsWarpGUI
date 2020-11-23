@@ -1,6 +1,6 @@
 website: https://marcely.de
 version: ${project.version}
-name: EssentialsWarpGUI
+name: Essentials_WarpGUI
 author: Marcely1199
 main: de.marcely.warpgui.EssentialsWarpGUI
 description: Adds a GUI to the /warp command
