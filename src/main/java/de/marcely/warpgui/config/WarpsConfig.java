@@ -8,6 +8,10 @@
 
 package de.marcely.warpgui.config;
 
+import java.util.logging.Logger;
+
+import org.bukkit.inventory.ItemStack;
+
 import de.marcely.configmanager2.EZConfigManager;
 import de.marcely.configmanager2.objects.Config;
 import de.marcely.configmanager2.objects.ListItem;
@@ -22,7 +26,7 @@ public class WarpsConfig {
 	
 	public static EZConfigManager cm = new EZConfigManager(Util.FILE_CONFIG_WARPS, true);
 	
-	public static void load(){
+	public static void load(Logger logger){
 		EssentialsWarpGUI.instance.getContainer().removeAllWarps();
 		
 		cm.load();
@@ -40,9 +44,20 @@ public class WarpsConfig {
 				final Config config_prefix = warpTree.getConfigChild("prefix");
 				final Config config_suffix = warpTree.getConfigChild("suffix");
 				
-				if(config_icon != null) warp.setIcon(ItemStackUtil.ofString(config_icon.getValue()));
-				if(config_prefix != null) warp.setPrefix(config_prefix.getValue());
-				if(config_suffix != null) warp.setSuffix(config_suffix.getValue());
+				if(config_icon != null){
+					final ItemStack is = ItemStackUtil.ofString(config_icon.getValue());
+					
+					if(is != null)
+						warp.setIcon(is);
+					else
+						logger.warning("Failed to parse icon of warp \"" + warp.getName() + "\": It has been reset back to default");
+				}
+				
+				if(config_prefix != null)
+					warp.setPrefix(config_prefix.getValue());
+				
+				if(config_suffix != null)
+					warp.setSuffix(config_suffix.getValue());
 			}
 			
 			// load lore

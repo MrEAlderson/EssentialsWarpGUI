@@ -77,7 +77,7 @@ public class EssentialsWarpGUI extends JavaPlugin {
 		
 		BaseConfig.load();
 		MessagesConfig.load();
-		WarpsConfig.load();
+		WarpsConfig.load(this.getLogger());
 		
 		// load&convert old warps if they still exist
 		if(WarpConfig.exists()){
