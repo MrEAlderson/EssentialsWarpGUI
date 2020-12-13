@@ -8,9 +8,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import de.marcely.warpgui.EssentialsWarpGUI;
 
 public class EventsManager implements Listener {
 	
@@ -55,14 +52,6 @@ public class EventsManager implements Listener {
 				GUI.openInventories.get(player).onClose(player);
 			
 			GUI.openInventories.remove(player);
-			
-			if(GUI.openInventoriesDelayed.containsKey(player)){
-				new BukkitRunnable(){
-					public void run(){
-						GUI.openInventoriesDelayed.remove(player);
-					}
-				}.runTaskLater(EssentialsWarpGUI.instance, 1);
-			}
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package de.marcely.ezgui;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -8,8 +9,7 @@ import org.bukkit.entity.Player;
 
 public abstract class BaseGUI {
 	
-	public static Map<Player, BaseGUI> openInventories = new HashMap<Player, BaseGUI>();
-	public static Map<Player, BaseGUI> openInventoriesDelayed = new HashMap<Player, BaseGUI>();
+	public static Map<Player, BaseGUI> openInventories = new HashMap<>();
 	
 	/**
 	 * 
@@ -32,24 +32,23 @@ public abstract class BaseGUI {
 	
 	public abstract boolean hasAntiDrop();
 	
-	
-	/**
-	 * 
-	 * Closes the GUI for every player
-	 */
-	public void close(){
-		close(false);
-	}
-	
 	/**
 	 * 
 	 * Closes the GUI for every player
 	 * @param silent If it should execute the onClose event
 	 */
-	public void close(boolean silent){
-		for(Entry<Player, BaseGUI> e:openInventories.entrySet()){
-			if(e.getValue().equals(this))
-				close(e.getKey(), silent);
+	public void close(){
+		final Iterator<Entry<Player, BaseGUI>> it = openInventories.entrySet().iterator();
+		
+		while(it.hasNext()){
+			final Entry<Player, BaseGUI> e = it.next();
+			
+			if(e.getValue() != this)
+				continue;
+			
+			it.remove();
+			
+			e.getKey().closeInventory();
 		}
 	}
 	
@@ -59,16 +58,7 @@ public abstract class BaseGUI {
 	 * @param silent If it should execute the onClose event
 	 */
 	public void close(Player player){
-		close(player, false);
-	}
-	
-	/**
-	 * 
-	 * Closes the GUI for the specific player
-	 */
-	public void close(Player player, boolean silent){
-		if(silent)
-			openInventories.remove(player);
+		openInventories.remove(player);
 		
 		player.closeInventory();
 	}
