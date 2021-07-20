@@ -19,11 +19,8 @@ public class StringUtil {
 		return str;
 	}
 	
-	public static String readableStringToFormattedChatColor(String str){
-		for(ChatColor c:ChatColor.values())
-			str = str.replace("&" + c.getChar(), "" + c);
-		
-		return str;
+	public static String translateToColorCodes(String str){
+		return ChatColor.translateAlternateColorCodes('&', str);
 	}
 	
 	public static String join(CharSequence delimiter, CharSequence... elements){

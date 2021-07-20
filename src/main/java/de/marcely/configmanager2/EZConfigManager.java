@@ -67,6 +67,12 @@ public class EZConfigManager extends ConfigFile {
 		else
 			return null;
 	}
+
+	public @Nullable String getConfigString(String name, String def){
+		final String val = getConfigString(name);
+
+		return val != null ? val : def;
+	}
 	
 	public @Nullable Boolean getConfigBoolean(String name){
 		final String config = getConfigString(name);
@@ -75,6 +81,12 @@ public class EZConfigManager extends ConfigFile {
 			return Boolean.valueOf(config);
 		else
 			return null;
+	}
+
+	public @Nullable Boolean getConfigBoolean(String name, Boolean def){
+		final Boolean val = getConfigBoolean(name);
+
+		return val != null ? val : def;
 	}
 	
 	private static boolean isDouble(String str){
@@ -105,6 +117,12 @@ public class EZConfigManager extends ConfigFile {
 		else
 			return null;
 	}
+
+	public @Nullable Double getConfigDouble(String name, Double def){
+		final Double val = getConfigDouble(name);
+
+		return val != null ? val : def;
+	}
 	
 	public @Nullable Integer getConfigInt(String name){
 		final String config = getConfigString(name);
@@ -113,6 +131,12 @@ public class EZConfigManager extends ConfigFile {
 			return Integer.valueOf(config);
 		else
 			return null;
+	}
+
+	public @Nullable Integer getConfigInt(String name, Integer def){
+		final Integer val = getConfigInt(name);
+
+		return val != null ? val : def;
 	}
 	
 	public void addEmptyLine(){

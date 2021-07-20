@@ -87,7 +87,7 @@ public class WarpCommand implements CommandExecutor {
 		if(warps.size() - maxPerPage*(page-1) <= 0)
 			return false;
 		
-		final GUI gui = new GUI(ConfigValue.inventory_title, 1);
+		final GUI gui = new GUI(ConfigValue.inventory_title, Math.max(1, Math.min(6, ConfigValue.gui_height)));
 		final int itemsAmount = Math.min(maxPerPage, warps.size() - maxPerPage*(page-1));
 		
 		// add items
@@ -107,13 +107,16 @@ public class WarpCommand implements CommandExecutor {
 					
 					if(warp.getPrefix() != null)
 						name.append(warp.getPrefix());
-					
-					name.append(warp.getName());
+
+					if(warp.getDisplayName() != null)
+						name.append(warp.getDisplayName());
+					else
+						name.append(warp.getName());
 					
 					if(warp.getSuffix() != null)
 						name.append(warp.getSuffix());
 					
-					im.setDisplayName(StringUtil.readableStringToFormattedChatColor(name.toString()));
+					im.setDisplayName(StringUtil.translateToColorCodes(name.toString()));
 				}
 				
 				// add lore
@@ -121,7 +124,7 @@ public class WarpCommand implements CommandExecutor {
 					final List<String> newLore = new ArrayList<>(warp.getLore().size());
 					
 					for(String lore:warp.getLore())
-						newLore.add(StringUtil.readableStringToFormattedChatColor(lore));
+						newLore.add(StringUtil.translateToColorCodes(lore));
 					
 					im.setLore(newLore);
 				}

@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 
 public class ConfigValue {
 	
-	public static String inventory_title = ChatColor.DARK_AQUA + "Warps";
-	public static boolean include_command_warps = true;
+	public static String inventory_title;
+	public static boolean include_command_warps;
+	public static int gui_height;
 }

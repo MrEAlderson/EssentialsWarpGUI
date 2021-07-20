@@ -12,28 +12,22 @@ import de.marcely.configmanager2.EZConfigManager;
 import de.marcely.warpgui.EssentialsWarpGUI;
 import de.marcely.warpgui.util.StringUtil;
 import de.marcely.warpgui.util.Util;
+import org.bukkit.ChatColor;
 
 public class BaseConfig {
 	
 	public static EZConfigManager manager = new EZConfigManager(Util.FILE_CONFIG_BASE, false);
 	
 	public static void load(){
-		if(!manager.exists()){
-			save();
-			return;
-		}
-		
 		manager.load();
 		
 		final String version = manager.getDescription("config-version");
-		final String invtitle = manager.getConfigString("inv-title");
-		final Boolean incl_warps = manager.getConfigBoolean("includecmd-warps");
 		
 		{
-			if(invtitle != null)
-				ConfigValue.inventory_title = StringUtil.readableStringToFormattedChatColor(invtitle);
-			if(incl_warps != null)
-				ConfigValue.include_command_warps = incl_warps;
+			ConfigValue.inventory_title = StringUtil.translateToColorCodes(
+					manager.getConfigString("inv-title", "&3Warps"));
+			ConfigValue.include_command_warps = manager.getConfigBoolean("includecmd-warps", true);
+			ConfigValue.gui_height = manager.getConfigInt("gui-height", 0);
 		}
 		
 		if(version == null || version != null && !version.equals(EssentialsWarpGUI.getVersion()))
@@ -53,6 +47,11 @@ public class BaseConfig {
 		
 		manager.addComment("If it's enabled, /warps will open the GUI too");
 		manager.addConfig("includecmd-warps", ConfigValue.include_command_warps);
+
+		manager.addEmptyLine();
+
+		manager.addComment("The minimum height of the gui. Shouldn't be greater than 6");
+		manager.addConfig("gui-height", ConfigValue.gui_height);
 		
 		manager.save();
 	}

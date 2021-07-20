@@ -22,9 +22,13 @@ import lombok.Setter;
 
 public abstract class Warp {
 	
-	@Getter private String name;
+	@Getter
+	private String name;
 	private ItemStack icon;
-	@Getter @Setter private String prefix, suffix;
+	@Getter @Setter
+	private String prefix, suffix, displayName;
+	@Getter @Setter
+	private Integer forceSlot;
 	private List<String> lores = new ArrayList<String>();
 	
 	public Warp(String name){

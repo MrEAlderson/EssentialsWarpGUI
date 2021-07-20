@@ -23,13 +23,17 @@ public class Config {
 	@Getter @Setter String value;
 	
 	public Config(String name, Tree parent){
-		this(name, parent, null);
+		this(name, parent, (String) null);
 	}
 	
 	public Config(String name, Tree parent, String value){
 		this.name = name;
 		this.parent = parent;
 		this.value = value;
+	}
+
+	public Config(String name, Tree parent, Number value){
+		this(name, parent, "" + value);
 	}
 	
 	public byte getType(){
@@ -40,8 +44,12 @@ public class Config {
 		return parent != null ? parent.getAbsolutePath() + (!parent.getAbsolutePath().isEmpty() ? "." : "") + name : "";
 	}
 	
-	public @Nullable Boolean getValueAsBoolean(){
-		return null;
+	public boolean getValueAsBoolean(){
+		return Boolean.parseBoolean(getValue());
+	}
+
+	public int getValueAsInt(){
+		return Integer.parseInt(getValue());
 	}
 	
 	// Util

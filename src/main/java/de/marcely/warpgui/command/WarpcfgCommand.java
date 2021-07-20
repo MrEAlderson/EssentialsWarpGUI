@@ -25,6 +25,7 @@ public class WarpcfgCommand implements CommandExecutor {
 			new SubCommand("seticon", "<warp name> <material>", new SetIconCommand()),
 			new SubCommand("prefix", "<warp name> [...]", new PrefixCommand()),
 			new SubCommand("suffix", "<warp name> [...]", new SuffixCommand()),
+			new SubCommand("displayname", "<warp name> [...]", new DisplayNameCommand()),
 			new SubCommand("lore", "<warp name> [...]", new LoreCommand())
 		};
 	}
