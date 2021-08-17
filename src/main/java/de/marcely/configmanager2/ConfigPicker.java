@@ -69,7 +69,7 @@ public class ConfigPicker {
 			
 			return tree.getConfigChild(strs[strs.length-1]);
 		}else
-			return !container.getConfigNeverNull ? null : new Config(null, null, null) /* TODO */;
+			return !container.getConfigNeverNull ? null : new Config(null, null, (String) null) /* TODO */;
 	}
 	
 	public List<Config> getConfigsWhichStartWith(String name){

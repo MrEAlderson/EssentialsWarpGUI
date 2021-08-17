@@ -26,7 +26,8 @@ public class WarpcfgCommand implements CommandExecutor {
 			new SubCommand("prefix", "<warp name> [...]", new PrefixCommand()),
 			new SubCommand("suffix", "<warp name> [...]", new SuffixCommand()),
 			new SubCommand("displayname", "<warp name> [...]", new DisplayNameCommand()),
-			new SubCommand("lore", "<warp name> [...]", new LoreCommand())
+			new SubCommand("lore", "<warp name> [...]", new LoreCommand()),
+			new SubCommand("forceslot", "<warp name> [...]", new ForceSlotCommand())
 		};
 	}
 	

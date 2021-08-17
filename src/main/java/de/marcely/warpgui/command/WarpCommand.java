@@ -133,12 +133,24 @@ public class WarpCommand implements CommandExecutor {
 			}
 			
 			// add to gui
-			gui.addItem(new GUIItem(icon){
+			final GUIItem gi = new GUIItem(icon){
 				public void onClick(Player whoClicked, boolean leftClick, boolean shiftClick){
 					gui.close();
 					warp.warp(player);
 				}
-			});
+			};
+
+			if(warp.getForceSlot() == null)
+				gui.addItem(gi);
+			else{
+				final int slot = Math.max(0, Math.min(6*9-1, warp.getForceSlot()));
+				final int height = (int) Math.ceil((slot+1) / 9D);
+
+				if(height > gui.getHeight())
+					gui.setHeight(height);
+
+				gui.setItemAt(gi, slot);
+			}
 		}
 		
 		// add footer for moving between pages

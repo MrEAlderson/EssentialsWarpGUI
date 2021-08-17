@@ -34,11 +34,11 @@ public class MessagesConfig {
 				continue;
 			
 			final String key = config.getName();
-			final String value = (String) config.getValue();
+			final String value = config.getValue();
 			final Message msg = Message.getMessage(key);
 			
 			if(msg != null)
-				msg.setValue(StringUtil.readableStringToFormattedChatColor(value));
+				msg.setValue(StringUtil.translateToColorCodes(value));
 		}
 	}
 	

@@ -41,20 +41,25 @@ public class DisplayNameCommand implements SubCommandExecutor {
 			
 			return;
 		}
-		
-		if(args.length == 1){
+
+		final Runnable sendHelp = () -> {
 			for(int i=0; i<7; i++)
 				sender.sendMessage("");
-			
+
 			if(warp.getDisplayName() != null)
 				sender.sendMessage(ChatColor.GRAY + "Display name: " + ChatColor.WHITE + warp.getDisplayName());
 			else
 				sender.sendMessage(Message.No_DisplayName.getValue().replace("{warp}", warp.getName()));
-			
+
 			sender.sendMessage("");
-			sender.sendMessage(Message.Usage_Change_DisplayName.getValue().replace("{usage}", "/" + label + " displayname <warp name> set <name>"));
-			sender.sendMessage(Message.Usage_Remove_DisplayName.getValue().replace("{usage}", "/" + label + " displayname <warp name> remove"));
-			
+			sender.sendMessage(Message.Usage_Change_DisplayName.getValue()
+					.replace("{usage}", "/" + label + " displayname <warp name> set <name>"));
+			sender.sendMessage(Message.Usage_Remove_DisplayName.getValue()
+					.replace("{usage}", "/" + label + " displayname <warp name> remove"));
+		};
+
+		if(args.length == 1){
+			sendHelp.run();
 			return;
 		}
 		
@@ -80,6 +85,10 @@ public class DisplayNameCommand implements SubCommandExecutor {
 				
 				sender.sendMessage(Message.Removed_DisplayName.getValue().replace("{warp}", warp.getName()));
 			}
+			break;
+
+		default:
+			sendHelp.run();
 			break;
 		}
 	}

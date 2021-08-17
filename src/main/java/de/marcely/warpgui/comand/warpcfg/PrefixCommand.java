@@ -42,20 +42,25 @@ public class PrefixCommand implements SubCommandExecutor {
 			
 			return;
 		}
-		
-		if(args.length == 1){
+
+		final Runnable sendHelp = () -> {
 			for(int i=0; i<7; i++)
 				sender.sendMessage("");
-			
+
 			if(warp.getPrefix() != null)
 				sender.sendMessage(ChatColor.GRAY + "Prefix: " + ChatColor.WHITE + warp.getPrefix());
 			else
 				sender.sendMessage(Message.No_Prefix.getValue().replace("{warp}", warp.getName()));
-			
+
 			sender.sendMessage("");
-			sender.sendMessage(Message.Usage_Change_Prefix.getValue().replace("{usage}", "/" + label + " prefix <warp name> set <prefix>"));
-			sender.sendMessage(Message.Usage_Remove_Prefix.getValue().replace("{usage}", "/" + label + " prefix <warp name> remove"));
-			
+			sender.sendMessage(Message.Usage_Change_Prefix.getValue()
+					.replace("{usage}", "/" + label + " prefix <warp name> set <prefix>"));
+			sender.sendMessage(Message.Usage_Remove_Prefix.getValue()
+					.replace("{usage}", "/" + label + " prefix <warp name> remove"));
+		};
+
+		if(args.length == 1){
+			sendHelp.run();
 			return;
 		}
 		
@@ -81,6 +86,10 @@ public class PrefixCommand implements SubCommandExecutor {
 				
 				sender.sendMessage(Message.Removed_Prefix.getValue().replace("{warp}", warp.getName()));
 			}
+			break;
+
+		default:
+			sendHelp.run();
 			break;
 		}
 	}

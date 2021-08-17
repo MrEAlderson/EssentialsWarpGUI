@@ -43,18 +43,23 @@ public class LoreCommand implements SubCommandExecutor {
 			
 			return;
 		}
-		
-		if(args.length == 1){
+
+		final Runnable sendHelp = () -> {
 			sender.sendMessage(ChatColor.DARK_AQUA + "Lore:");
-			
+
 			int i=1;
 			for(String lore:warp.getLore())
 				sender.sendMessage("" + ChatColor.DARK_GREEN + (i++) + ChatColor.GREEN + " " + lore);
-			
+
 			sender.sendMessage("");
-			sender.sendMessage(Message.Usage_Add_Lore.getValue().replace("{usage}", "/" + label + " lore " + warp.getName() + " add <lore>"));
-			sender.sendMessage(Message.Usage_Remove_Lore.getValue().replace("{usage}", "/" + label + " lore " + warp.getName() + " remove <line>"));
-			
+			sender.sendMessage(Message.Usage_Add_Lore.getValue()
+					.replace("{usage}", "/" + label + " lore " + warp.getName() + " add <lore>"));
+			sender.sendMessage(Message.Usage_Remove_Lore.getValue()
+					.replace("{usage}", "/" + label + " lore " + warp.getName() + " remove <line>"));
+		};
+		
+		if(args.length == 1){
+			sendHelp.run();
 			return;
 		}
 		
@@ -97,6 +102,10 @@ public class LoreCommand implements SubCommandExecutor {
 				
 				sender.sendMessage(Message.Removed_Lore.getValue().replace("{id}", args[2]).replace("{warp}", warp.getName()));
 			}
+			break;
+
+		default:
+			sendHelp.run();
 			break;
 		}
 	}
