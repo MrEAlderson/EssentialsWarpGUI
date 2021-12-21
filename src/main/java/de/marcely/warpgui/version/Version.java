@@ -33,7 +33,9 @@ public enum Version {
     R2_16(16, 2),
     R3_16(16, 3),
 
-    R1_17(17, 1);
+    R1_17(17, 1),
+
+    R1_18(18, 1);
 
     @Getter
     private static VersionInstance current;
@@ -41,7 +43,7 @@ public enum Version {
     @Getter
     private final int minor, revision;
 
-    private Version(int minor, int revision){
+    Version(int minor, int revision){
         this.minor = minor;
         this.revision = revision;
     }
