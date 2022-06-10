@@ -36,7 +36,9 @@ public enum Version {
     R1_17(17, 1),
 
     R1_18(18, 1),
-    R2_18(18, 2);;
+    R2_18(18, 2),
+
+    R1_19(19, 1);
 
     @Getter
     private static VersionInstance current;
@@ -80,7 +82,7 @@ public enum Version {
 			logger.warning("Stopping the plugin...");
 
 			Bukkit.getPluginManager().disablePlugin(plugin);
-			
+
 			return false;*/
         }
 
