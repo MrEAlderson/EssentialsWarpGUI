@@ -10,7 +10,7 @@
 	<repositories>
 		<repository>
 			<id>spigotmc-repo</id>
-			<url>http://hub.spigotmc.org/nexus/content/groups/public</url>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public</url>
 		</repository>
 		<repository>
 			<id>ess-repo</id>
