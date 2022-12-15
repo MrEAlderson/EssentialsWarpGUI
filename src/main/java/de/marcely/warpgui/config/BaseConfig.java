@@ -10,9 +10,11 @@ package de.marcely.warpgui.config;
 
 import de.marcely.configmanager2.EZConfigManager;
 import de.marcely.warpgui.EssentialsWarpGUI;
+import de.marcely.warpgui.util.ItemStackUtil;
 import de.marcely.warpgui.util.StringUtil;
 import de.marcely.warpgui.util.Util;
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.ItemStack;
 
 public class BaseConfig {
 	
@@ -28,8 +30,9 @@ public class BaseConfig {
 					manager.getConfigString("inv-title", "&3Warps"));
 			ConfigValue.include_command_warps = manager.getConfigBoolean("includecmd-warps", true);
 			ConfigValue.gui_height = manager.getConfigInt("gui-height", 0);
+			ConfigValue.empty_space_filling = manager.getConfigString("empty-space-filling", null);
 		}
-		
+
 		if(version == null || version != null && !version.equals(EssentialsWarpGUI.getVersion()))
 			save();
 	}
@@ -52,6 +55,11 @@ public class BaseConfig {
 
 		manager.addComment("The minimum height of the gui. Shouldn't be greater than 6");
 		manager.addConfig("gui-height", ConfigValue.gui_height);
+
+		manager.addEmptyLine();
+
+		manager.addComment("The material which should be used to fill empty space in the inventory");
+		manager.addConfig("empty-space-filling", ConfigValue.gui_height);
 		
 		manager.save();
 	}

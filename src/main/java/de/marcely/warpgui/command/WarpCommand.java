@@ -11,6 +11,7 @@ package de.marcely.warpgui.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -86,10 +87,27 @@ public class WarpCommand implements CommandExecutor {
 		
 		if(warps.size() - maxPerPage*(page-1) <= 0)
 			return false;
-		
-		final GUI gui = new GUI(ConfigValue.inventory_title, Math.max(1, Math.min(6, ConfigValue.gui_height)));
+
+		final int rows = Math.max(1, Math.min(6, ConfigValue.gui_height));
+		final GUI gui = new GUI(ConfigValue.inventory_title, rows);
 		final int itemsAmount = Math.min(maxPerPage, warps.size() - maxPerPage*(page-1));
-		
+
+		final String emptySpaceFilling = ConfigValue.empty_space_filling;
+		if(emptySpaceFilling != null){
+			final ItemStack is = ItemStackUtil.ofString(emptySpaceFilling);
+
+			if(is != null) {
+				final ItemMeta meta = is.getItemMeta();
+				meta.setDisplayName("");
+				is.setItemMeta(meta);
+				
+				for(int slot=0; slot<rows*9; slot++)
+					gui.setItemAt(new DecGUIItem(is), slot);
+			} else {
+				Bukkit.getLogger().warning("Failed to parse empty space filling");
+			}
+		}
+
 		// add items
 		for(int i=0; i<itemsAmount; i++){
 			final Warp warp = warps.get(maxPerPage*(page-1)+i);
