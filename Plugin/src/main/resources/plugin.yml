@@ -1,0 +1,19 @@
+website: "https://seibel.dev"
+version: "${project.version}"
+name: "EssentialsWarpGUI"
+author: "Marcel Seibel (aka Marcely1199)"
+main: "de.marcely.warpgui.WarpGUIPlugin"
+description: "Opens a gorgeous GUI for warp selection"
+api-version: 1.13
+softdepend: [ Essentials, EssentialsX ]
+
+commands:
+  warpcfg:
+    description: "Modify the look-and-feel of the warps"
+    usage: "/warpcfg [args...]"
+    aliases: [ warpconfig, warpscfg, warpsconfig ]
+
+permissions:
+  warpcfg.cfg:
+    description: "Grants access to the \"/warpcfg\" command"
+    default: op
