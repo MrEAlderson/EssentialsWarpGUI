@@ -38,7 +38,7 @@ public class GeneralConfig {
     public static SoundData soundOpen = new SoundData(XSound.ENTITY_CHICKEN_EGG, .7f, 1.5f);
     public static SoundData soundClose = new SoundData(XSound.ENTITY_CHICKEN_EGG, .7f, .5f);
     public static SoundData soundClickWarp = new SoundData(XSound.UI_BUTTON_CLICK, .7f, 1.5f);
-    public static SoundData soundTeleportWarp = new SoundData(XSound.BLOCK_PORTAL_TRAVEL, .7f, 1.5f);
+    public static SoundData soundTeleportWarp = new SoundData(XSound.BLOCK_END_PORTAL_SPAWN, .3f, 2f);
     public static SoundData soundSwitchPage = new SoundData(XSound.ENTITY_HORSE_STEP_WOOD, 1f, 1.2f);
 
     public static Set<String> listenToCommands = new HashSet<>(Arrays.asList("warp", "warps"));
