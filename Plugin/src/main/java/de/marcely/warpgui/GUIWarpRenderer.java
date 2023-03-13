@@ -6,6 +6,7 @@ import de.marcely.warpgui.util.gui.ChestGUI;
 import de.marcely.warpgui.util.gui.ClickListener;
 import de.marcely.warpgui.util.gui.GUIItem;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -238,13 +239,25 @@ public class GUIWarpRenderer {
     private GUIItem getGUIItem(GUIWarp warp, AtomicBoolean closeSound) {
         return new GUIItem(warp.getDisplayedIcon(), (player, leftClick, shiftClick) -> {
             if (warp.hasHook()) {
+                final Location prevLoc = player.getLocation();
+
                 closeSound.set(false);
                 warp.getHook().teleport(player);
-                closeSound.set(true); // teleport possibly failed
-            } else
-                Message.WARP_HOOK_DISAPPEAR.send(player);
 
-            GeneralConfig.soundClickWarp.play(player);
+                if (!prevLoc.equals(player.getLocation())) {
+                    // teleported successfully
+                    GeneralConfig.soundTeleportWarp.play(player);
+
+                } else {
+                    // teleportation likely failed
+                    closeSound.set(true);
+                    GeneralConfig.soundClickWarp.play(player);
+                }
+
+            } else {
+                Message.WARP_HOOK_DISAPPEAR.send(player);
+                GeneralConfig.soundClickWarp.play(player);
+            }
         });
     }
 

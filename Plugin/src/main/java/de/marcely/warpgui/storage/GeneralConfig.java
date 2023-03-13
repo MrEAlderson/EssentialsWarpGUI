@@ -38,6 +38,7 @@ public class GeneralConfig {
     public static SoundData soundOpen = new SoundData(XSound.ENTITY_CHICKEN_EGG, .7f, 1.5f);
     public static SoundData soundClose = new SoundData(XSound.ENTITY_CHICKEN_EGG, .7f, .5f);
     public static SoundData soundClickWarp = new SoundData(XSound.UI_BUTTON_CLICK, .7f, 1.5f);
+    public static SoundData soundTeleportWarp = new SoundData(XSound.BLOCK_PORTAL_TRAVEL, .7f, 1.5f);
     public static SoundData soundSwitchPage = new SoundData(XSound.ENTITY_HORSE_STEP_WOOD, 1f, 1.2f);
 
     public static Set<String> listenToCommands = new HashSet<>(Arrays.asList("warp", "warps"));
@@ -73,6 +74,7 @@ public class GeneralConfig {
         soundOpen = SoundData.parse(root, "sound.open");
         soundClose = SoundData.parse(root, "sound.close");
         soundClickWarp = SoundData.parse(root, "sound.click-warp");
+        soundTeleportWarp = SoundData.parse(root, "sound.teleport-warp");
         soundSwitchPage = SoundData.parse(root, "sound.switch-page");
 
         listenToCommands = root.getStringList("listen-to-commands").stream()
@@ -143,6 +145,7 @@ public class GeneralConfig {
         soundOpen.serialize(root, "sound.open");
         soundClose.serialize(root, "sound.close");
         soundClickWarp.serialize(root, "sound.click-warp");
+        soundTeleportWarp.serialize(root, "sound.teleport-warp");
         soundSwitchPage.serialize(root, "sound.switch-page");
 
         root.addEmptyLine();
