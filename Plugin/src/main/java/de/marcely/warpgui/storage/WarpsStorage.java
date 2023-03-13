@@ -75,6 +75,8 @@ public class WarpsStorage {
                     if (allSuccessful)
                         WarpV2Config.deleteLegacyFiles();
                 }
+
+                return;
             }
 
             for (File file : folder.listFiles()) {

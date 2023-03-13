@@ -131,7 +131,7 @@ public class GUIWarpRenderer {
         // add items
         for (GUIWarp warp : addItems) {
             gui.addItem(
-                    getGUIItem(warp),
+                    getGUIItem(warp, closeSound),
                     addCondition
             );
         }
@@ -216,7 +216,7 @@ public class GUIWarpRenderer {
                 gui.setHeight(6);
 
             gui.setItem(
-                    getGUIItem(warp),
+                    getGUIItem(warp, closeSound),
                     warp.getSlotX(),
                     y
             );
@@ -235,11 +235,13 @@ public class GUIWarpRenderer {
         });
     }
 
-    private GUIItem getGUIItem(GUIWarp warp) {
+    private GUIItem getGUIItem(GUIWarp warp, AtomicBoolean closeSound) {
         return new GUIItem(warp.getDisplayedIcon(), (player, leftClick, shiftClick) -> {
-            if (warp.hasHook())
+            if (warp.hasHook()) {
+                closeSound.set(false);
                 warp.getHook().teleport(player);
-            else
+                closeSound.set(true); // teleport possibly failed
+            } else
                 Message.WARP_HOOK_DISAPPEAR.send(player);
 
             GeneralConfig.soundClickWarp.play(player);
