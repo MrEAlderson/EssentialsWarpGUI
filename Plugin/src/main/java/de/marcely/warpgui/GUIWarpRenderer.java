@@ -108,7 +108,7 @@ public class GUIWarpRenderer {
                 .limit(maxItemsCount+1 /* so that we know whether there is a next page */)
                 .collect(Collectors.toList());
         final boolean hasNextPage = addItems.size() > maxItemsCount;
-        final int guiHeight = Math.min(6, heightFixed ?
+        final int guiHeight = Math.min(6, !heightFixed ?
                 GeneralConfig.inventoryHeight :
                 Math.max(1, (int) Math.ceil(addItems.size() / ((double) 9-offsetX)))+offsetY);
         final String guiTitle =
@@ -201,7 +201,7 @@ public class GUIWarpRenderer {
         }
 
         // set items
-        final int pastGuiSlotsCount = (heightFixed ? GeneralConfig.inventoryHeight : 6)*9;
+        final int pastGuiSlotsCount = (heightFixed ? 6 : GeneralConfig.inventoryHeight)*9;
         final List<GUIWarp> setItems = this.container.getAll().stream()
                 .filter(warp ->
                         warp.hasHook() &&
