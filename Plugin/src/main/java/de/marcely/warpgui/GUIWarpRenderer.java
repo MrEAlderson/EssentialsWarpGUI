@@ -52,7 +52,7 @@ public class GUIWarpRenderer {
                 openNow(player, page, closeSound, openSound);
             } catch(ConcurrentModificationException e) {
                 this.container.getPlugin().getLogger().log(
-                        Level.SEVERE,
+                        Level.INFO,
                         "Server does not support async inventories. Opening them on the main-thread from now on",
                         e);
 
