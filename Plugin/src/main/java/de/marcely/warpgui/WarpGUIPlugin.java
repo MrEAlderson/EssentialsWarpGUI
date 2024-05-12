@@ -2,6 +2,7 @@ package de.marcely.warpgui;
 
 import de.marcely.warpgui.command.WarpCommandInjector;
 import de.marcely.warpgui.command.WarpConfigCommand;
+import de.marcely.warpgui.util.ItemStackStringifier;
 import de.marcely.warpgui.warp.provider.WarpProvider;
 import de.marcely.warpgui.storage.GeneralConfig;
 import de.marcely.warpgui.storage.WarpsStorage;
@@ -25,6 +26,9 @@ public class WarpGUIPlugin extends JavaPlugin {
     private final GUIWarpContainer container = new GUIWarpContainer(this);
     @Getter
     private final GUIWarpRenderer renderer = new GUIWarpRenderer(container);
+
+    @Getter
+    private final ItemStackStringifier itemStackStringifier = new ItemStackStringifier(this);
 
     @Override
     public void onEnable() {

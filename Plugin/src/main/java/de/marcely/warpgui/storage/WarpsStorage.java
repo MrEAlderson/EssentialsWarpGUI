@@ -1,16 +1,11 @@
 package de.marcely.warpgui.storage;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import de.marcely.warpgui.GUIWarp;
 import de.marcely.warpgui.GUIWarpContainer;
-import de.marcely.warpgui.Warp;
 import de.marcely.warpgui.WarpV2;
-import de.marcely.warpgui.config.WarpConfig;
 import de.marcely.warpgui.config.WarpV2Config;
 import de.marcely.warpgui.util.AdaptedGson;
-import de.marcely.warpgui.util.ItemStackUtil;
-import org.bukkit.inventory.ItemStack;
+import de.marcely.warpgui.util.ItemStackStringifier;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -18,7 +13,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -42,9 +36,10 @@ public class WarpsStorage {
                 if (WarpV2Config.existLegacyFiles()) {
                     logger.info("Detected that you are coming from a legacy version! Auto-upgrading the warps...");
 
+                    final ItemStackStringifier isStringifier = container.getPlugin().getItemStackStringifier();
                     final Collection<WarpV2> legacy = WarpV2Config.loadLegacyFiles(
                             logger,
-                            str -> Optional.ofNullable(ItemStackUtil.parse(str))
+                            str -> Optional.ofNullable(isStringifier.parse(str))
                     );
 
                     if (legacy == null)
